@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warehouses – ChainFlow SCM</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="app-container">
+
+  <nav class="sidebar glass">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div>ChainFlow<span class="logo-subtitle">Supply Chain Management</span></div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar-initials">--</div>
+      <div class="user-info"><div class="user-name" id="sidebar-username">Loading...</div><div class="user-role" id="sidebar-role">—</div></div>
+      <span class="badge primary" id="role-tag" style="font-size:0.6rem;padding:2px 7px;"></span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products <span class="nav-badge">2</span></a></li>
+        <li class="nav-item"><a href="orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Orders</a></li>
+        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments <span class="nav-badge">1</span></a></li>
+        <li class="nav-item"><a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a></li>
+      </ul>
+      <div class="nav-section-label" style="margin-top:8px;">Management</div>
+      <ul class="nav-links">
+        <li class="nav-item active"><a href="warehouses.html"><i class="fa-solid fa-warehouse"></i> Warehouses</a></li>
+        <li class="nav-item" data-admin-only><a href="analytics.html"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
+        <li class="nav-item" data-admin-only><a href="reports.html"><i class="fa-solid fa-file-export"></i> Reports</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <a href="#" data-admin-only><i class="fa-solid fa-gear"></i> Settings</a>
+      <a href="#" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="topbar glass">
+      <div class="topbar-left">
+        <div class="breadcrumb"><span>Management</span><i class="fa-solid fa-chevron-right"></i><span>Warehouses</span></div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" data-tooltip="Notifications"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></button>
+        <button class="btn btn-primary btn-sm" data-modal-target="add-wh-modal" data-permission="addWarehouse"><i class="fa-solid fa-plus"></i> Add Warehouse</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="page-header fade-up">
+        <div class="page-header-left">
+          <h1>Warehouse Management</h1>
+          <p>Monitor storage capacity, type, and manager assignments across all facilities.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" data-admin-only><i class="fa-solid fa-file-export"></i> Export</button>
+        </div>
+      </div>
+
+      <!-- Capacity Overview Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px;">
+
+        <div class="glass-card fade-up delay-1" style="padding:22px;">
+          <div class="flex gap-2" style="margin-bottom:14px;">
+            <div class="stat-icon-box" style="background:rgba(59,130,246,0.12);color:var(--accent-blue);width:42px;height:42px;"><i class="fa-solid fa-warehouse"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:var(--text-sm);">North Central Hub</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);">WH-01 · Chicago, IL · General</div>
+            </div>
+            <span class="badge primary ml-auto">General</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:6px;">
+            <span class="text-muted">Manager: Alice Smith</span>
+            <span style="font-weight:700;color:var(--accent-blue);">75%</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:75%;background:var(--accent-blue);"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;text-align:center;">
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">312</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Products</div>
+            </div>
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">5,000</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Capacity</div>
+            </div>
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">12</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Shipments</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">View Details</button>
+            <button class="btn-icon-only" data-permission="editWarehouse" data-tooltip="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+          </div>
+        </div>
+
+        <div class="glass-card fade-up delay-2" style="padding:22px;">
+          <div class="flex gap-2" style="margin-bottom:14px;">
+            <div class="stat-icon-box" style="background:rgba(239,68,68,0.12);color:var(--accent-red);width:42px;height:42px;"><i class="fa-solid fa-warehouse"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:var(--text-sm);">East Coast Storage</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);">WH-02 · New York, NY · General</div>
+            </div>
+            <span class="badge danger ml-auto">90% Full</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:6px;">
+            <span class="text-muted">Manager: Bob Johnson</span>
+            <span style="font-weight:700;color:var(--accent-red);">90%</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%;background:var(--accent-red);"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;text-align:center;">
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">204</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Products</div>
+            </div>
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">3,000</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Capacity</div>
+            </div>
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">18</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Shipments</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">View Details</button>
+            <button class="btn-icon-only" data-permission="editWarehouse" data-tooltip="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+          </div>
+        </div>
+
+        <div class="glass-card fade-up delay-3" style="padding:22px;">
+          <div class="flex gap-2" style="margin-bottom:14px;">
+            <div class="stat-icon-box" style="background:rgba(6,182,212,0.12);color:var(--accent-cyan);width:42px;height:42px;"><i class="fa-solid fa-snowflake"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:var(--text-sm);">West Cold Storage</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);">WH-03 · Seattle, WA · Cold</div>
+            </div>
+            <span class="badge cyan ml-auto">Cold</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:6px;">
+            <span class="text-muted">Manager: Carol Davis</span>
+            <span style="font-weight:700;color:var(--accent-cyan);">40%</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%;background:var(--accent-cyan);"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;text-align:center;">
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">121</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Products</div>
+            </div>
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">2,000</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Capacity</div>
+            </div>
+            <div style="background:var(--bg-hover);border-radius:8px;padding:8px;">
+              <div style="font-size:1rem;font-weight:700;">8</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);">Shipments</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">View Details</button>
+            <button class="btn-icon-only" data-permission="editWarehouse" data-tooltip="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Table per Warehouse -->
+      <div class="glass-card fade-up delay-3">
+        <div class="table-toolbar">
+          <div class="section-title">Product-Warehouse Assignments</div>
+          <div class="filter-group">
+            <select class="filter-select" id="wh-filter" onchange="filterWH()">
+              <option value="">All Warehouses</option>
+              <option value="WH-01">WH-01 – North Central</option>
+              <option value="WH-02">WH-02 – East Coast</option>
+              <option value="WH-03">WH-03 – West Cold</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Product ID</th><th>Product Name</th><th>Warehouse</th><th>Stock Qty</th><th>Status</th></tr>
+            </thead>
+            <tbody id="wh-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Warehouse Modal -->
+<div class="modal-overlay" id="add-wh-modal">
+  <div class="modal glass">
+    <div class="modal-header">
+      <div><div class="modal-title">Add New Warehouse</div><div class="modal-subtitle">Register a new storage facility</div></div>
+      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="form-group"><label>Warehouse Name</label><input type="text" class="form-control" placeholder="e.g. South Hub"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type</label>
+        <select class="form-control"><option>General</option><option>Cold</option></select>
+      </div>
+      <div class="form-group"><label>Capacity</label><input type="number" class="form-control" placeholder="e.g. 5000"></div>
+    </div>
+    <div class="form-group"><label>Location</label><input type="text" class="form-control" placeholder="City, State"></div>
+    <div class="form-group"><label>Manager Name</label><input type="text" class="form-control" placeholder="e.g. John Doe"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-modal-close>Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('add-wh-modal').classList.remove('active')"><i class="fa-solid fa-check"></i> Save Warehouse</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/mockData.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+const session = requireAuth();
+if (session) {
+  document.getElementById('user-avatar-initials').textContent = session.username.slice(0,2).toUpperCase();
+  applyPermissions();
+}
+
+async function loadWarehouses() {
+  try {
+    const res = await fetch('http://localhost:3000/api/warehouses');
+    const warehouses = await res.json();
+    
+    // Update capacity cards (top 3)
+    const cards = document.querySelectorAll('.page-content > div:nth-child(2) > div');
+    warehouses.slice(0, 3).forEach((w, i) => {
+      const card = cards[i];
+      if (card) {
+        card.querySelector('div div div:first-child').textContent = w.name;
+        card.querySelector('div div div:last-child').textContent = `${w.id} · ${w.location} · ${w.type}`;
+        card.querySelector('span').textContent = w.type;
+        card.querySelector('div:nth-child(2) span:last-child').textContent = w.capacity + '%';
+        card.querySelector('.progress-bar-fill').style.width = w.capacity + '%';
+        card.querySelector('div:nth-child(2) span:first-child').textContent = 'Manager: ' + w.manager;
+      }
+    });
+
+    // Update table
+    const pRes = await fetch('http://localhost:3000/api/products');
+    const products = await pRes.json();
+    const b = document.getElementById('wh-table-body');
+    b.innerHTML = '';
+    products.forEach(p => {
+      b.innerHTML += `
+        <tr data-wh="${p.warehouse}">
+          <td class="font-mono" style="color:var(--accent-blue)">${p.id}</td>
+          <td class="fw-600">${p.name}</td>
+          <td><span class="badge primary">${p.warehouse || 'N/A'}</span></td>
+          <td>${p.stock}</td>
+          <td>${getStatusBadge(p.stock > 20 ? 'In Stock' : 'Low Stock')}</td>
+        </tr>`;
+    });
+    applyPermissions();
+  } catch (err) { console.error(err); }
+}
+
+async function saveWarehouse() {
+  const modal = document.getElementById('add-wh-modal');
+  const name = modal.querySelector('input[placeholder="e.g. South Hub"]').value;
+  const type = modal.querySelector('select').value;
+  const capacity = modal.querySelector('input[type="number"]').value;
+  const location = modal.querySelector('input[placeholder="City, State"]').value;
+  const manager = modal.querySelector('input[placeholder="e.g. John Doe"]').value;
+
+  try {
+    const res = await fetch('http://localhost:3000/api/warehouses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, location, capacity, type, manager })
+    });
+    if ((await res.json()).success) {
+      modal.classList.remove('active');
+      loadWarehouses();
+      alert('Warehouse added successfully!');
+    }
+  } catch (err) { alert('Error adding warehouse'); }
+}
+
+function filterWH() {
+  const wh = document.getElementById('wh-filter').value;
+  const rows = document.querySelectorAll('#wh-table-body tr');
+  rows.forEach(r => r.style.display = (!wh || r.dataset.wh === wh) ? '' : 'none');
+}
+
+loadWarehouses();
+document.querySelector('#add-wh-modal .btn-primary').onclick = saveWarehouse;
+</script>
+</body>
+</html>

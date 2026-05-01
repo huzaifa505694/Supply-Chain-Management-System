@@ -1,0 +1,133 @@
+-- ==========================================================
+-- ChainFlow Advanced SQL Features (Oracle 11g)
+-- Triggers, Procedures, Sequences, and Exception Handling
+-- ==========================================================
+
+-- 1. SEQUENCES FOR AUTOMATIC ID GENERATION
+CREATE SEQUENCE SEQ_PERSON_ID START WITH 100 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_SUPPLIER_ID START WITH 500 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_RETAILER_ID START WITH 500 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_WAREHOUSE_ID START WITH 100 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_PRODUCT_ID START WITH 2000 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_ORDER_ID START WITH 10000 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_SHIPMENT_ID START WITH 50000 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_PROVIDER_ID START WITH 1000 INCREMENT BY 1;
+
+-- 2. TRIGGERS FOR AUTO-ID (So Node.js doesn't have to calculate them)
+CREATE OR REPLACE TRIGGER TRG_PERSON_ID
+BEFORE INSERT ON PERSON FOR EACH ROW
+BEGIN
+  IF :NEW.PERSON_ID IS NULL THEN
+    SELECT SEQ_PERSON_ID.NEXTVAL INTO :NEW.PERSON_ID FROM DUAL;
+  END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_PRODUCT_ID
+BEFORE INSERT ON PRODUCTS FOR EACH ROW
+BEGIN
+  IF :NEW.PRODUCT_ID IS NULL THEN
+    SELECT SEQ_PRODUCT_ID.NEXTVAL INTO :NEW.PRODUCT_ID FROM DUAL;
+  END IF;
+END;
+/
+
+-- 3. BUSINESS LOGIC TRIGGER: Update Stock on Order
+-- Automatically decreases product stock when a record is added to INCLUDE
+CREATE OR REPLACE TRIGGER TRG_UPDATE_STOCK
+AFTER INSERT ON INCLUDE FOR EACH ROW
+BEGIN
+    UPDATE PRODUCTS 
+    SET STOCK_QUANTITY = STOCK_QUANTITY - :NEW.ITEM_QUANTITY
+    WHERE PRODUCT_ID = :NEW.PRODUCT_ID;
+END;
+/
+
+-- 4. BUSINESS LOGIC TRIGGER: Auto-Create Shipment
+-- When an order is placed, create a skeleton shipment record
+CREATE OR REPLACE TRIGGER TRG_AUTO_SHIPMENT
+AFTER INSERT ON ORDERS FOR EACH ROW
+DECLARE
+    v_ship_id NUMBER;
+BEGIN
+    SELECT SEQ_SHIPMENT_ID.NEXTVAL INTO v_ship_id FROM DUAL;
+    
+    INSERT INTO SHIPMENT (SHIPMENT_ID, TRACKING_NUMBER, STATUS, ORDER_ID, SHIPMENT_TYPE)
+    VALUES (v_ship_id, 'TRK-' || :NEW.ORDER_ID || '-' || DBMS_RANDOM.STRING('X', 5), 'Preparing', :NEW.ORDER_ID, 'DAY');
+    
+    INSERT INTO DAY_SHIP (SHIPMENT_ID, PREFERRED_WINDOW)
+    VALUES (v_ship_id, 'Standard Window');
+END;
+/
+
+-- 5. STORED PROCEDURE: Atomic Order Placement
+-- Handles stock validation, order creation, and billing in one transaction
+CREATE OR REPLACE PROCEDURE PROC_PLACE_ORDER (
+    p_retailer_id IN NUMBER,
+    p_product_id  IN NUMBER,
+    p_quantity    IN NUMBER,
+    p_bill        IN NUMBER,
+    p_order_id    OUT NUMBER
+) AS
+    v_current_stock NUMBER;
+    insufficient_stock EXCEPTION;
+BEGIN
+    -- 1. Check stock level
+    SELECT STOCK_QUANTITY INTO v_current_stock FROM PRODUCTS WHERE PRODUCT_ID = p_product_id;
+    
+    IF v_current_stock < p_quantity THEN
+        RAISE insufficient_stock;
+    END IF;
+
+    -- 2. Create Order
+    SELECT SEQ_ORDER_ID.NEXTVAL INTO p_order_id FROM DUAL;
+    INSERT INTO ORDERS (ORDER_ID, ORDER_DATE, BILL, RETAILER_ID)
+    VALUES (p_order_id, SYSDATE, p_bill, p_retailer_id);
+
+    -- 3. Link Product (This fires TRG_UPDATE_STOCK)
+    INSERT INTO INCLUDE (PRODUCT_ID, ORDER_ID, ITEM_QUANTITY)
+    VALUES (p_product_id, p_order_id, p_quantity);
+
+    COMMIT;
+
+EXCEPTION
+    WHEN insufficient_stock THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Insufficient stock for product ID: ' || p_product_id);
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END;
+/
+
+-- 6. STORED PROCEDURE: Safe Partner Deletion
+CREATE OR REPLACE PROCEDURE PROC_DELETE_PARTNER (
+    p_person_id IN NUMBER
+) AS
+BEGIN
+    -- Delete from child tables first
+    DELETE FROM SUPPLIERS WHERE PERSON_ID = p_person_id;
+    DELETE FROM RETAILERS WHERE PERSON_ID = p_person_id;
+    
+    -- Delete main record
+    DELETE FROM PERSON WHERE PERSON_ID = p_person_id;
+    
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END;
+/
+
+-- 7. STORED PROCEDURE: Update Product Stock
+CREATE OR REPLACE PROCEDURE PROC_RESTOCK_PRODUCT (
+    p_product_id IN NUMBER,
+    p_added_qty  IN NUMBER
+) AS
+BEGIN
+    UPDATE PRODUCTS 
+    SET STOCK_QUANTITY = STOCK_QUANTITY + p_added_qty 
+    WHERE PRODUCT_ID = p_product_id;
+    COMMIT;
+END;
+/

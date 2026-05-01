@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders – SCM Pro</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="app-container">
+
+  <nav class="sidebar glass">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div>ChainFlow<span class="logo-subtitle">Supply Chain Management</span></div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar-initials">--</div>
+      <div class="user-info"><div class="user-name" id="sidebar-username">Loading...</div><div class="user-role" id="sidebar-role">—</div></div>
+      <span class="badge primary" id="role-tag" style="font-size:0.6rem;padding:2px 7px;"></span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products <span class="nav-badge">2</span></a></li>
+        <li class="nav-item active"><a href="orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Orders</a></li>
+        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments <span class="nav-badge">1</span></a></li>
+        <li class="nav-item"><a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a></li>
+      </ul>
+      <div class="nav-section-label" style="margin-top:8px;">Management</div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="warehouses.html"><i class="fa-solid fa-warehouse"></i> Warehouses</a></li>
+        <li class="nav-item" data-admin-only><a href="analytics.html"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
+        <li class="nav-item" data-admin-only><a href="reports.html"><i class="fa-solid fa-file-export"></i> Reports</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <a href="#" data-admin-only><i class="fa-solid fa-gear"></i> Settings</a>
+      <a href="#" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="topbar glass">
+      <div class="topbar-left">
+        <div class="breadcrumb"><span>Home</span><i class="fa-solid fa-chevron-right"></i><span>Orders</span></div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" data-tooltip="Notifications"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></button>
+        <button class="btn btn-primary btn-sm" data-modal-target="new-order-modal" data-permission="addOrder"><i class="fa-solid fa-plus"></i> New Order</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="page-header fade-up">
+        <div class="page-header-left">
+          <h1>Order Management</h1>
+          <p>Track and process all retailer orders in the supply chain.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-filter"></i> Filters</button>
+          <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-file-export"></i> Export</button>
+        </div>
+      </div>
+
+      <!-- Status tabs -->
+      <div class="glass-card fade-up delay-1" style="display:flex;gap:0;margin-bottom:20px;overflow:hidden;">
+        <button class="tab-btn active" data-status="" onclick="setTab(this,'')">All Orders <span style="margin-left:6px;font-size:0.72rem;background:rgba(255,255,255,0.1);padding:1px 7px;border-radius:20px;" id="cnt-all">—</span></button>
+        <button class="tab-btn" data-status="Pending"    onclick="setTab(this,'Pending')">Pending <span style="margin-left:6px;font-size:0.72rem;background:rgba(245,158,11,0.15);color:var(--accent-amber);padding:1px 7px;border-radius:20px;" id="cnt-pending">—</span></button>
+        <button class="tab-btn" data-status="Processing" onclick="setTab(this,'Processing')">Processing</button>
+        <button class="tab-btn" data-status="Shipped"    onclick="setTab(this,'Shipped')">Shipped</button>
+        <button class="tab-btn" data-status="Delivered"  onclick="setTab(this,'Delivered')">Delivered</button>
+      </div>
+
+      <div class="glass-card fade-up delay-2">
+        <div class="table-toolbar">
+          <div class="table-search">
+            <i class="fa-solid fa-search search-icon"></i>
+            <input type="text" id="ord-search" placeholder="Search order ID, retailer…" oninput="applyFilters()">
+          </div>
+          <div class="filter-group">
+            <select class="filter-select" id="ord-date-f">
+              <option value="">Any Date</option>
+              <option>Last 7 days</option>
+              <option>This Month</option>
+            </select>
+            <button class="btn btn-primary btn-sm" data-modal-target="new-order-modal"><i class="fa-solid fa-plus"></i> New Order</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID <i class="fa-solid fa-sort sort-icon"></i></th>
+                <th>Date <i class="fa-solid fa-sort sort-icon"></i></th>
+                <th>Retailer</th>
+                <th>Items</th>
+                <th>Total Bill</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ord-body"></tbody>
+          </table>
+        </div>
+        <div class="table-pagination">
+          <span class="pagination-info" id="ord-info">—</span>
+          <div class="pagination-controls">
+            <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Order Modal -->
+<div class="modal-overlay" id="new-order-modal">
+  <div class="modal glass">
+    <div class="modal-header">
+      <div><div class="modal-title">Create New Order</div><div class="modal-subtitle">Select retailer and products to place an order</div></div>
+      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Retailer</label>
+        <select class="form-control">
+          <option>TechCorp Solutions (RET-01)</option>
+          <option>DataCenter Systems (RET-02)</option>
+          <option>Global Networks (RET-03)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Reseller ID</label>
+        <input type="text" class="form-control" placeholder="e.g. RSL-004">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Product</label>
+        <select class="form-control">
+          <option>Industrial Processor X-1 (PRD-001)</option>
+          <option>Server Rack 42U (PRD-002)</option>
+          <option>Gigabit Switch 48-Port (PRD-004)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Item Quantity</label>
+        <input type="number" class="form-control" value="1" min="1">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Order Date</label>
+        <input type="date" class="form-control" value="2026-05-01">
+      </div>
+      <div class="form-group">
+        <label>Bill Amount (USD)</label>
+        <div class="input-icon-wrap">
+          <i class="fa-solid fa-dollar-sign input-prefix-icon"></i>
+          <input type="number" class="form-control" placeholder="0.00" step="0.01">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-modal-close>Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('new-order-modal').classList.remove('active')"><i class="fa-solid fa-check"></i> Place Order</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.tab-btn {
+  flex:1; padding:14px 16px;
+  background:transparent; border:none;
+  color:var(--text-muted); font-size:var(--text-sm); font-weight:500;
+  cursor:pointer; border-right:1px solid var(--border);
+  transition:var(--transition); font-family:'Inter',sans-serif;
+}
+.tab-btn:last-child { border-right:none; }
+.tab-btn:hover { background:var(--bg-hover); color:var(--text-primary); }
+.tab-btn.active { color:var(--accent-blue); background:rgba(59,130,246,0.07); }
+</style>
+
+<script src="js/mockData.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+const session = requireAuth();
+if (session) {
+  const initials = session.username.slice(0,2).toUpperCase();
+  document.getElementById('user-avatar-initials').textContent = initials;
+  applyPermissions();
+}
+
+let allOrders = [];
+let currentStatus = '';
+
+async function loadOrders() {
+  try {
+    const res = await fetch('http://localhost:3000/api/orders');
+    allOrders = await res.json();
+    
+    document.getElementById('cnt-all').textContent = allOrders.length;
+    document.getElementById('cnt-pending').textContent = allOrders.filter(o => o.status === 'Pending').length;
+    
+    applyFilters();
+    populateDropdowns();
+  } catch (err) { console.error(err); }
+}
+
+async function populateDropdowns() {
+  const pRes = await fetch('http://localhost:3000/api/partners');
+  const partners = await pRes.json();
+  const retSelect = document.querySelector('#new-order-modal select');
+  retSelect.innerHTML = partners.filter(p => p.type === 'RETAILER').map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+
+  const prRes = await fetch('http://localhost:3000/api/products');
+  const products = await prRes.json();
+  const prSelect = document.querySelectorAll('#new-order-modal select')[1];
+  prSelect.innerHTML = products.map(p => `<option value="${p.id}">${p.name} ($${p.price})</option>`).join('');
+}
+
+function renderOrders(list) {
+  const b = document.getElementById('ord-body');
+  b.innerHTML = '';
+  list.forEach(o => {
+    b.innerHTML += `
+      <tr>
+        <td class="font-mono fw-600" style="color:var(--accent-blue)">${o.id}</td>
+        <td class="text-muted">${o.date}</td>
+        <td>${o.retailer}</td>
+        <td>${o.items || 1} item${(o.items||1)>1?'s':''}</td>
+        <td class="fw-600">$${Number(o.amount).toLocaleString('en-US',{minimumFractionDigits:2})}</td>
+        <td>${getStatusBadge(o.status || 'Processing')}</td>
+        <td>
+           <button class="btn-icon-only" data-tooltip="View Details"><i class="fa-solid fa-eye"></i></button>
+           <button class="btn-icon-only" data-permission="editOrder" data-tooltip="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+           <button class="btn-icon-only danger" onclick="deleteOrder(${o.id})" data-permission="deleteOrder" data-tooltip="Delete"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>`;
+  });
+  document.getElementById('ord-info').textContent = `Showing 1–${list.length} of ${list.length} orders`;
+  applyPermissions();
+}
+
+async function deleteOrder(id) {
+  if (!confirm('Are you sure you want to delete order ' + id + '?')) return;
+  try {
+    const res = await fetch(`http://localhost:3000/api/orders/${id}`, { method: 'DELETE' });
+    if ((await res.json()).success) {
+      loadOrders();
+      alert('Order deleted');
+    }
+  } catch (err) { alert('Error deleting order'); }
+}
+
+async function placeOrder() {
+  const modal = document.getElementById('new-order-modal');
+  const retailerId = modal.querySelectorAll('select')[0].value;
+  const productId = modal.querySelectorAll('select')[1].value;
+  const quantity = modal.querySelector('input[type="number"]').value;
+  const amount = modal.querySelectorAll('input[type="number"]')[1].value;
+
+  try {
+    const res = await fetch('http://localhost:3000/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ retailerId, productId, quantity, amount })
+    });
+    if ((await res.json()).success) {
+      modal.classList.remove('active');
+      loadOrders();
+      alert('Order placed successfully!');
+    }
+  } catch (err) { alert('Error placing order'); }
+}
+
+function applyFilters() {
+  const q = document.getElementById('ord-search').value.toLowerCase();
+  const filtered = allOrders.filter(o =>
+    (String(o.id) + o.retailer).toLowerCase().includes(q) &&
+    (!currentStatus || o.status === currentStatus)
+  );
+  renderOrders(filtered);
+}
+
+function setTab(btn, status) {
+  currentStatus = status;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+loadOrders();
+document.querySelector('#new-order-modal .btn-primary').onclick = placeOrder;
+</script>
+</body>
+</html>

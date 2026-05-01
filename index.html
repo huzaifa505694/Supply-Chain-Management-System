@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – ChainFlow SCM</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="app-container">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <nav class="sidebar glass">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div>ChainFlow<span class="logo-subtitle">Supply Chain Management</span></div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar-initials">--</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-username">Loading...</div>
+        <div class="user-role" id="sidebar-role">—</div>
+      </div>
+      <span class="badge primary" id="role-tag" style="font-size:0.6rem;padding:2px 7px;"></span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <ul class="nav-links">
+        <li class="nav-item active"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products <span class="nav-badge">2</span></a></li>
+        <li class="nav-item"><a href="orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Orders</a></li>
+        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments <span class="nav-badge">1</span></a></li>
+        <li class="nav-item"><a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a></li>
+      </ul>
+      <div class="nav-section-label" style="margin-top:8px;">Management</div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="warehouses.html"><i class="fa-solid fa-warehouse"></i> Warehouses</a></li>
+        <li class="nav-item" data-admin-only><a href="analytics.html"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
+        <li class="nav-item" data-admin-only><a href="reports.html"><i class="fa-solid fa-file-export"></i> Reports</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <a href="#" data-admin-only><i class="fa-solid fa-gear"></i> Settings</a>
+      <a href="#" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </nav>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main-content">
+    <div class="topbar glass">
+      <div class="topbar-left">
+        <div class="breadcrumb">
+          <span>ChainFlow</span><i class="fa-solid fa-chevron-right"></i><span>Dashboard</span>
+        </div>
+        <div class="topbar-search">
+          <i class="fa-solid fa-search search-icon"></i>
+          <input type="text" placeholder="Search orders, products, shipments...">
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" data-tooltip="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notif-dot"></span>
+        </button>
+        <button class="topbar-icon-btn" data-tooltip="Refresh">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+        <button class="btn btn-primary btn-sm" data-modal-target="quick-order-modal" data-permission="addOrder">
+          <i class="fa-solid fa-plus"></i> New Order
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Role Banner for non-admin -->
+      <div id="role-banner" style="display:none;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 16px;margin-bottom:20px;align-items:center;gap:10px;font-size:var(--text-sm);">
+        <i class="fa-solid fa-circle-info" style="color:var(--accent-green);"></i>
+        <span>You are signed in as <strong>Operator</strong>. Some features are view-only.</span>
+      </div>
+
+      <div class="page-header fade-up">
+        <div class="page-header-left">
+          <h1>Dashboard Overview</h1>
+          <p id="topbar-date">Thursday, May 1, 2026 &nbsp;·&nbsp; Last synced 2 min ago</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" data-admin-only><i class="fa-solid fa-file-export"></i> Export</button>
+          <button class="btn btn-secondary btn-sm"><i class="fa-regular fa-calendar"></i> This Month</button>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card glass-card fade-up delay-1">
+          <div class="stat-top">
+            <div class="stat-label">Total Products</div>
+            <div class="stat-icon-box" style="background:rgba(59,130,246,0.12);color:var(--accent-blue);"><i class="fa-solid fa-box-open"></i></div>
+          </div>
+          <div class="stat-value">637</div>
+          <div class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +12 this week</div>
+        </div>
+        <div class="stat-card glass-card fade-up delay-2">
+          <div class="stat-top">
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-icon-box" style="background:rgba(16,185,129,0.12);color:var(--accent-green);"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+          </div>
+          <div class="stat-value">1,284</div>
+          <div class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +84 this month</div>
+        </div>
+        <div class="stat-card glass-card fade-up delay-3">
+          <div class="stat-top">
+            <div class="stat-label">Active Shipments</div>
+            <div class="stat-icon-box" style="background:rgba(139,92,246,0.12);color:var(--accent-purple);"><i class="fa-solid fa-truck-fast"></i></div>
+          </div>
+          <div class="stat-value">38</div>
+          <div class="stat-change down"><i class="fa-solid fa-arrow-trend-down"></i> -3 from yesterday</div>
+        </div>
+        <div class="stat-card glass-card fade-up delay-4">
+          <div class="stat-top">
+            <div class="stat-label">Low Stock Alerts</div>
+            <div class="stat-icon-box" style="background:rgba(245,158,11,0.12);color:var(--accent-amber);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          </div>
+          <div class="stat-value">7</div>
+          <div class="stat-change" style="color:var(--accent-amber);"><i class="fa-solid fa-circle-exclamation"></i> Needs attention</div>
+        </div>
+      </div>
+
+      <!-- Two column -->
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;margin-bottom:20px;">
+        <div class="glass-card fade-up delay-2">
+          <div class="table-toolbar">
+            <div class="section-title">Recent Orders</div>
+            <div class="flex gap-2">
+              <div class="table-search" style="max-width:180px;">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="order-search" placeholder="Search…" oninput="filterTable()">
+              </div>
+              <select class="filter-select" id="order-status-filter" onchange="filterTable()">
+                <option value="">All Status</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Processing">Processing</option>
+                <option value="Pending">Pending</option>
+              </select>
+              <a href="orders.html" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th><th>Retailer</th><th>Date</th><th>Amount</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="orders-body"></tbody>
+            </table>
+          </div>
+          <div class="table-pagination">
+            <span class="pagination-info" id="orders-page-info">—</span>
+            <div class="pagination-controls">
+              <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card fade-up delay-3">
+          <div style="padding:18px 20px;border-bottom:1px solid var(--border);"><div class="section-title">Live Activity</div></div>
+          <div style="padding:8px 16px;" id="activity-feed"></div>
+        </div>
+      </div>
+
+      <!-- Warehouse Capacity -->
+      <div class="glass-card fade-up delay-4">
+        <div style="padding:18px 20px 14px;border-bottom:1px solid var(--border);"><div class="section-title">Warehouse Capacity</div></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;" id="warehouse-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Order Modal -->
+<div class="modal-overlay" id="quick-order-modal">
+  <div class="modal glass">
+    <div class="modal-header">
+      <div><div class="modal-title">Create New Order</div><div class="modal-subtitle">Place a new retailer order</div></div>
+      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Retailer</label>
+        <select class="form-control"><option>TechCorp Solutions</option><option>DataCenter Systems</option><option>Global Networks</option></select>
+      </div>
+      <div class="form-group">
+        <label>Order Date</label>
+        <input type="date" class="form-control" value="2026-05-01">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Product</label>
+        <select class="form-control"><option>Industrial Processor X-1</option><option>Server Rack 42U</option><option>Gigabit Switch 48-Port</option></select>
+      </div>
+      <div class="form-group">
+        <label>Quantity</label>
+        <div class="input-icon-wrap">
+          <i class="fa-solid fa-hashtag input-prefix-icon"></i>
+          <input type="number" class="form-control" value="1" min="1">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <textarea class="form-control" rows="2" placeholder="Any special delivery instructions…"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-modal-close>Cancel</button>
+      <button class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> Place Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="js/mockData.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+const session = requireAuth();
+if (session) {
+  const initials = session.username.slice(0,2).toUpperCase();
+  document.getElementById('user-avatar-initials').textContent = initials;
+  applyPermissions();
+  if (session.role !== 'admin') {
+    document.getElementById('role-banner').style.display = 'flex';
+  }
+}
+
+async function loadDashboard() {
+  try {
+    // 1. Stats
+    const statsRes = await fetch('http://localhost:3000/api/stats');
+    const stats = await statsRes.json();
+    document.querySelectorAll('.stat-value')[0].textContent = stats.products;
+    document.querySelectorAll('.stat-value')[1].textContent = stats.orders;
+    document.querySelectorAll('.stat-value')[2].textContent = stats.shipments;
+    document.querySelectorAll('.stat-value')[3].textContent = stats.lowStock;
+
+    // 2. Recent Orders
+    const ordersRes = await fetch('http://localhost:3000/api/orders');
+    const allOrders = await ordersRes.json();
+    renderOrders(allOrders.slice(0, 5));
+
+    // 3. Warehouse Capacity
+    const whRes = await fetch('http://localhost:3000/api/warehouses');
+    const warehouses = await whRes.json();
+    const wgrid = document.getElementById('warehouse-grid');
+    wgrid.innerHTML = '';
+    warehouses.forEach((w, i) => {
+      const color = w.capacity > 85 ? 'var(--accent-red)' : 'var(--accent-blue)';
+      wgrid.innerHTML += `
+        <div style="padding:18px 22px;${i < warehouses.length - 1 ? 'border-right:1px solid var(--border);' : ''}">
+          <div class="flex gap-2" style="margin-bottom:12px;">
+            <div class="stat-icon-box" style="background:rgba(59,130,246,0.1);color:var(--accent-blue);width:34px;height:34px;"><i class="fa-solid fa-warehouse"></i></div>
+            <div>
+              <div style="font-weight:600;font-size:var(--text-sm)">${w.name}</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted)">${w.id} · ${w.location}</div>
+            </div>
+            <span class="badge primary ml-auto">${w.type}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:6px;">
+            <span class="text-muted">Manager: ${w.manager}</span>
+            <span style="font-weight:600;color:${color}">${w.capacity}%</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${w.capacity}%;background:${color};"></div></div>
+        </div>`;
+    });
+
+    // Populate New Order dropdowns
+    const partnersRes = await fetch('http://localhost:3000/api/partners');
+    const partners = await partnersRes.json();
+    const retSelect = document.querySelector('#quick-order-modal select');
+    retSelect.innerHTML = partners.filter(p => p.type === 'RETAILER').map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+
+    const prodsRes = await fetch('http://localhost:3000/api/products');
+    const products = await prodsRes.json();
+    const prodSelect = document.querySelectorAll('#quick-order-modal select')[1];
+    prodSelect.innerHTML = products.map(p => `<option value="${p.id}">${p.name} ($${p.price})</option>`).join('');
+
+  } catch (err) { console.error('Dashboard Load Error:', err); }
+}
+
+function renderOrders(list) {
+  const b = document.getElementById('orders-body');
+  b.innerHTML = '';
+  list.forEach(o => {
+    b.innerHTML += `
+      <tr>
+        <td class="font-mono fw-600" style="color:var(--accent-blue)">${o.id}</td>
+        <td>${o.retailer}</td>
+        <td class="text-muted">${o.date}</td>
+        <td class="fw-600">$${Number(o.amount).toLocaleString('en-US',{minimumFractionDigits:2})}</td>
+        <td>${getStatusBadge(o.status || 'Processing')}</td>
+      </tr>`;
+  });
+}
+
+async function placeOrder() {
+  const modal = document.getElementById('quick-order-modal');
+  const retailerId = modal.querySelectorAll('select')[0].value;
+  const productId = modal.querySelectorAll('select')[1].value;
+  const quantity = modal.querySelector('input[type="number"]').value;
+  
+  // Find price
+  const res = await fetch('http://localhost:3000/api/products');
+  const products = await res.json();
+  const p = products.find(x => x.id == productId);
+  const amount = p ? p.price * quantity : 0;
+
+  try {
+    const res = await fetch('http://localhost:3000/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ retailerId, productId, quantity, amount })
+    });
+    if ((await res.json()).success) {
+      modal.classList.remove('active');
+      loadDashboard();
+      alert('Order placed successfully!');
+    }
+  } catch (err) { alert('Error placing order'); }
+}
+
+// Activity Feed (Keep static or derive from orders)
+const activities = [
+  { icon:'fa-plus', color:'var(--accent-green)', bg:'rgba(16,185,129,0.12)', text:'New order <b>ORD-1027</b> placed', time:'2 min ago' },
+  { icon:'fa-truck-fast', color:'var(--accent-blue)', bg:'rgba(59,130,246,0.12)', text:'Shipment <b>SHP-8821</b> dispatched', time:'14 min ago' },
+  { icon:'fa-triangle-exclamation', color:'var(--accent-amber)', bg:'rgba(245,158,11,0.12)', text:'<b>Server Rack 42U</b> low stock', time:'1 hr ago' },
+];
+const feed = document.getElementById('activity-feed');
+activities.forEach(a => {
+  feed.innerHTML += `
+    <div class="activity-item">
+      <div class="activity-icon" style="background:${a.bg};color:${a.color}"><i class="fa-solid ${a.icon}"></i></div>
+      <div class="activity-body">
+        <div class="activity-title">${a.text}</div>
+        <div class="activity-time">${a.time}</div>
+      </div>
+    </div>`;
+});
+
+loadDashboard();
+document.querySelector('#quick-order-modal .btn-primary').onclick = placeOrder;
+</script>
+</body>
+</html>

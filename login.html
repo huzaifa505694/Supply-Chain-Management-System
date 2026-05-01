@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainFlow SCM – Sign In</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #060b18;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(59,130,246,0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(139,92,246,0.10), transparent);
+  overflow-x: hidden;
+}
+
+/* Animated grid */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events:none; z-index:0;
+}
+
+/* ── Floating orbs ── */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: float 8s ease-in-out infinite;
+}
+.orb-1 { width:300px; height:300px; background:rgba(59,130,246,0.12); top:-60px; left:-60px; animation-delay:0s; }
+.orb-2 { width:250px; height:250px; background:rgba(139,92,246,0.10); bottom:-40px; right:-40px; animation-delay:3s; }
+@keyframes float {
+  0%,100%{ transform:translate(0,0); }
+  50%    { transform:translate(20px,20px); }
+}
+
+/* ── Wrapper ── */
+.wrapper {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 900px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* ════════════════════════
+   LEFT BRAND PANEL
+════════════════════════ */
+.brand {
+  background: linear-gradient(145deg, #0c1a3a 0%, #0a1228 60%, #10163a 100%);
+  border-right: 1px solid rgba(255,255,255,0.07);
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.brand::after {
+  content:'';
+  position:absolute;
+  width:280px; height:280px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%);
+  top:-80px; left:-80px;
+  pointer-events:none;
+}
+
+.brand-logo {
+  display:flex; align-items:center; gap:12px;
+  position:relative; z-index:1;
+}
+.brand-logo-icon {
+  width:44px; height:44px;
+  background:linear-gradient(135deg, #3b82f6, #6366f1);
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.25rem; color:#fff;
+  box-shadow: 0 6px 18px rgba(59,130,246,0.4);
+  flex-shrink:0;
+}
+.brand-logo-text h1 { font-size:1.2rem; font-weight:800; color:#fff; letter-spacing:-0.03em; }
+.brand-logo-text p  { font-size:0.65rem; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.1em; margin-top:1px; }
+
+.brand-tagline {
+  position:relative; z-index:1;
+}
+.brand-tagline h2 {
+  font-size:1.45rem; font-weight:800; color:#fff;
+  letter-spacing:-0.04em; line-height:1.25;
+  margin-bottom:10px;
+}
+.brand-tagline h2 .hl {
+  background:linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.brand-tagline p { font-size:0.82rem; color:rgba(255,255,255,0.4); line-height:1.65; }
+
+/* Stats mini grid */
+.brand-stats {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  position:relative; z-index:1;
+}
+.stat-box {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px; padding:12px 14px;
+}
+.stat-box .n { font-size:1.3rem; font-weight:700; color:#fff; letter-spacing:-0.03em; }
+.stat-box .l { font-size:0.65rem; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+
+/* Feature list */
+.feature-list {
+  display:flex; flex-direction:column; gap:9px;
+  position:relative; z-index:1;
+}
+.feature-item {
+  display:flex; align-items:center; gap:10px;
+  font-size:0.8rem; color:rgba(255,255,255,0.5);
+}
+.feature-icon {
+  width:26px; height:26px; border-radius:7px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem;
+}
+
+.brand-footer {
+  font-size:0.65rem; color:rgba(255,255,255,0.2);
+  margin-top:auto;
+  position:relative; z-index:1;
+}
+
+/* ════════════════════════
+   RIGHT FORM PANEL
+════════════════════════ */
+.form-panel {
+  background: rgba(8,13,25,0.98);
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.form-head { margin-bottom:22px; }
+.form-head h2 { font-size:1.25rem; font-weight:700; color:#f1f5f9; letter-spacing:-0.03em; }
+.form-head p  { font-size:0.82rem; color:#64748b; margin-top:5px; }
+
+/* Role cards */
+.role-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:20px; }
+
+.rc {
+  padding:12px;
+  border:2px solid rgba(255,255,255,0.07);
+  border-radius:12px;
+  background:rgba(255,255,255,0.02);
+  cursor:pointer;
+  transition:all 0.18s ease;
+  text-align:left;
+  font-family:'Inter',sans-serif;
+}
+.rc:hover { border-color:rgba(59,130,246,0.25); background:rgba(59,130,246,0.04); }
+.rc.sel   { border-color:#3b82f6; background:rgba(59,130,246,0.09); box-shadow:0 0 0 3px rgba(59,130,246,0.12); }
+.rc-icon {
+  width:32px; height:32px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.9rem; margin-bottom:8px;
+}
+.rc-title { font-size:0.82rem; font-weight:700; color:#f1f5f9; margin-bottom:3px; }
+.rc-desc  { font-size:0.7rem; color:#64748b; line-height:1.4; margin-bottom:8px; }
+.rc-perms { display:flex; flex-direction:column; gap:3px; }
+.rc-perm  { display:flex; align-items:center; gap:5px; font-size:0.68rem; }
+.rc-perm.y { color:rgba(52,211,153,0.8); }
+.rc-perm.n { color:rgba(239,68,68,0.55); }
+.rc-perm i { font-size:0.58rem; }
+
+/* Divider */
+.divider {
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:16px;
+}
+.divider .ln { flex:1; height:1px; background:rgba(255,255,255,0.07); }
+.divider span { font-size:0.7rem; color:#475569; }
+
+/* Inputs */
+.fg { margin-bottom:12px; }
+.fg label {
+  display:block; font-size:0.68rem; font-weight:600;
+  color:#64748b; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:6px;
+}
+.iw { position:relative; }
+.inp {
+  width:100%; padding:10px 13px 10px 37px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:9px; color:#f1f5f9;
+  font-size:0.875rem; font-family:'Inter',sans-serif;
+  transition:all 0.18s;
+}
+.inp:focus { outline:none; border-color:#3b82f6; background:rgba(59,130,246,0.06); box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+.inp::placeholder { color:#334155; }
+.ii { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:#475569; font-size:0.8rem; pointer-events:none; }
+.sp { position:absolute; right:12px; top:50%; transform:translateY(-50%); color:#475569; font-size:0.8rem; cursor:pointer; background:none; border:none; padding:0; transition:color 0.2s; }
+.sp:hover { color:#94a3b8; }
+
+/* Meta row */
+.meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.rml { display:flex; align-items:center; gap:6px; font-size:0.78rem; color:#475569; cursor:pointer; }
+.rml input { accent-color:#3b82f6; }
+.fl  { font-size:0.78rem; color:#3b82f6; cursor:pointer; background:none; border:none; font-family:'Inter',sans-serif; }
+.fl:hover { color:#60a5fa; }
+
+/* Submit button */
+.sub-btn {
+  width:100%; padding:11px;
+  border-radius:9px;
+  background:linear-gradient(135deg,#3b82f6 0%,#6366f1 100%);
+  color:#fff; font-size:0.9rem; font-weight:600;
+  font-family:'Inter',sans-serif; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  box-shadow:0 4px 16px rgba(59,130,246,0.3);
+  transition:all 0.2s; letter-spacing:-0.01em;
+  margin-bottom:14px;
+}
+.sub-btn:hover { transform:translateY(-1px); box-shadow:0 7px 22px rgba(59,130,246,0.4); }
+.sub-btn:active { transform:translateY(0); }
+
+/* Error */
+.err-box {
+  display:none; align-items:center; gap:8px;
+  background:rgba(239,68,68,0.09);
+  border:1px solid rgba(239,68,68,0.2);
+  color:#f87171; border-radius:8px;
+  padding:9px 12px; font-size:0.8rem; margin-bottom:12px;
+}
+.err-box.show { display:flex; }
+
+/* Demo hint */
+.demo {
+  background:rgba(99,102,241,0.07);
+  border:1px solid rgba(99,102,241,0.14);
+  border-radius:10px; padding:11px 14px;
+}
+.demo-title { font-size:0.67rem; font-weight:700; color:#6366f1; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px; }
+.demo-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+.demo-row:last-child { border-bottom:none; }
+.demo-role { font-size:0.72rem; font-weight:600; color:#c7d2fe; }
+.demo-val  { font-size:0.7rem; color:#475569; font-family:'Courier New',monospace; cursor:pointer; transition:color 0.15s; }
+.demo-val:hover { color:#6366f1; }
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .wrapper { grid-template-columns: 1fr; max-width: 440px; }
+  .brand   { padding: 28px 24px; gap: 20px; }
+  .brand-tagline h2 { font-size: 1.2rem; }
+  .form-panel { padding: 28px 24px; }
+}
+@media (max-width: 480px) {
+  body { padding: 12px; }
+  .brand-stats { grid-template-columns: repeat(4,1fr); }
+  .stat-box .n { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="wrapper">
+
+  <!-- ══ LEFT BRAND ══ -->
+  <div class="brand">
+
+    <div class="brand-logo">
+      <div class="brand-logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="brand-logo-text">
+        <h1>ChainFlow SCM</h1>
+        <p>Supply Chain Management</p>
+      </div>
+    </div>
+
+    <div class="brand-tagline">
+      <h2>Streamline Every <span class="hl">Link</span><br>in Your Chain</h2>
+      <p>A unified command center for managing suppliers, inventory, orders, and real-time logistics.</p>
+    </div>
+
+    <div class="brand-stats">
+      <div class="stat-box"><div class="n">1,284</div><div class="l">Active Orders</div></div>
+      <div class="stat-box"><div class="n">38</div><div class="l">Live Shipments</div></div>
+      <div class="stat-box"><div class="n">637</div><div class="l">Product SKUs</div></div>
+      <div class="stat-box"><div class="n">7</div><div class="l">Partners</div></div>
+    </div>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa;"><i class="fa-solid fa-shield-halved"></i></div>
+        Role-based access control
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.12);color:#34d399;"><i class="fa-solid fa-truck-fast"></i></div>
+        Real-time shipment tracking
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.12);color:#fbbf24;"><i class="fa-solid fa-warehouse"></i></div>
+        Warehouse capacity monitoring
+      </div>
+    </div>
+
+    <div class="brand-footer">© 2026 ChainFlow SCM · v1.0.0</div>
+
+  </div>
+
+  <!-- ══ RIGHT FORM ══ -->
+  <div class="form-panel">
+
+    <div class="form-head">
+      <h2>Welcome back 👋</h2>
+      <p>Sign in to your account to continue</p>
+    </div>
+
+    <!-- Role selector -->
+    <div class="role-grid">
+
+      <button class="rc sel" id="rc-admin" onclick="pickRole('admin')">
+        <div class="rc-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa;">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div class="rc-title">Administrator</div>
+        <div class="rc-desc">Full CRUD access to all modules</div>
+        <div class="rc-perms">
+          <div class="rc-perm y"><i class="fa-solid fa-check"></i> Manage all entities</div>
+          <div class="rc-perm y"><i class="fa-solid fa-check"></i> Delete records</div>
+          <div class="rc-perm y"><i class="fa-solid fa-check"></i> Settings & reports</div>
+        </div>
+      </button>
+
+      <button class="rc" id="rc-user" onclick="pickRole('user')">
+        <div class="rc-icon" style="background:rgba(16,185,129,0.12);color:#34d399;">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="rc-title">Operator</div>
+        <div class="rc-desc">View data & create orders</div>
+        <div class="rc-perms">
+          <div class="rc-perm y"><i class="fa-solid fa-check"></i> View all data</div>
+          <div class="rc-perm y"><i class="fa-solid fa-check"></i> Create orders</div>
+          <div class="rc-perm n"><i class="fa-solid fa-xmark"></i> No delete access</div>
+        </div>
+      </button>
+
+    </div>
+
+    <div class="divider">
+      <div class="ln"></div><span>Enter credentials</span><div class="ln"></div>
+    </div>
+
+    <!-- Error -->
+    <div class="err-box" id="err">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span id="err-txt">Invalid credentials.</span>
+    </div>
+
+    <!-- Username -->
+    <div class="fg">
+      <label>Username</label>
+      <div class="iw">
+        <i class="fa-regular fa-user ii"></i>
+        <input class="inp" type="text" id="uname" placeholder="Enter your username" autocomplete="username">
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="fg">
+      <label>Password</label>
+      <div class="iw">
+        <i class="fa-solid fa-lock ii"></i>
+        <input class="inp" type="password" id="pwd" placeholder="Enter your password">
+        <button class="sp" onclick="togglePwd()" id="eye-btn" type="button">
+          <i class="fa-regular fa-eye" id="eye-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Meta -->
+    <div class="meta">
+      <label class="rml"><input type="checkbox" checked> Remember me</label>
+      <button class="fl">Forgot password?</button>
+    </div>
+
+    <button class="sub-btn" onclick="doLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i> Sign In to ChainFlow
+    </button>
+
+    <!-- Demo hints -->
+    <div class="demo">
+      <div class="demo-title"><i class="fa-solid fa-circle-info"></i> &nbsp;Demo Credentials</div>
+      <div class="demo-row">
+        <span class="demo-role" style="color:#60a5fa;">Admin</span>
+        <span class="demo-val" onclick="fill('admin','admin123')" title="Click to fill">admin / admin123 ↗</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-role" style="color:#34d399;">Operator</span>
+        <span class="demo-val" onclick="fill('operator','user123')" title="Click to fill">operator / user123 ↗</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+if (getSession()) location.href = 'index.html';
+
+let role = 'admin';
+const USERS = {
+  admin:    { password:'admin123', role:'admin' },
+  operator: { password:'user123',  role:'user'  },
+};
+
+function pickRole(r) {
+  role = r;
+  document.getElementById('rc-admin').classList.toggle('sel', r === 'admin');
+  document.getElementById('rc-user').classList.toggle('sel',  r === 'user');
+}
+
+function togglePwd() {
+  const i = document.getElementById('pwd');
+  const icon = document.getElementById('eye-icon');
+  i.type = i.type === 'password' ? 'text' : 'password';
+  icon.className = i.type === 'password' ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash';
+}
+
+function showErr(msg) {
+  const el = document.getElementById('err');
+  document.getElementById('err-txt').textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+function fill(u, p) {
+  document.getElementById('uname').value = u;
+  document.getElementById('pwd').value = p;
+  const match = USERS[u];
+  if (match) pickRole(match.role);
+}
+
+async function doLogin() {
+  const u = document.getElementById('uname').value.trim();
+  const p = document.getElementById('pwd').value;
+  if (!u || !p) { showErr('Please enter your username and password.'); return; }
+  
+  const btn = document.querySelector('.sub-btn');
+  btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...';
+  
+  try {
+    const res = await fetch('http://localhost:3000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p })
+    });
+    const data = await res.json();
+    
+    if (data.success) {
+      if (data.role !== role) {
+        showErr(`This account is "${data.role === 'admin' ? 'Administrator' : 'Operator'}". Select the correct role card.`);
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In to ChainFlow';
+        return;
+      }
+      setSession(u, data.role);
+      location.href = 'index.html';
+    } else {
+      showErr(data.message || 'Invalid credentials.');
+      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In to ChainFlow';
+    }
+  } catch (err) {
+    showErr('Unable to connect to database server. Is the Node.js backend running?');
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In to ChainFlow';
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>

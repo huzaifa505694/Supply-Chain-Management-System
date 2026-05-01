@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partners – SCM Pro</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="app-container">
+
+  <nav class="sidebar glass">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div>ChainFlow<span class="logo-subtitle">Supply Chain Management</span></div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar-initials">--</div>
+      <div class="user-info"><div class="user-name" id="sidebar-username">Loading...</div><div class="user-role" id="sidebar-role">—</div></div>
+      <span class="badge primary" id="role-tag" style="font-size:0.6rem;padding:2px 7px;"></span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products <span class="nav-badge">2</span></a></li>
+        <li class="nav-item"><a href="orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Orders</a></li>
+        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments <span class="nav-badge">1</span></a></li>
+        <li class="nav-item active"><a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a></li>
+      </ul>
+      <div class="nav-section-label" style="margin-top:8px;">Management</div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="warehouses.html"><i class="fa-solid fa-warehouse"></i> Warehouses</a></li>
+        <li class="nav-item" data-admin-only><a href="analytics.html"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
+        <li class="nav-item" data-admin-only><a href="reports.html"><i class="fa-solid fa-file-export"></i> Reports</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <a href="#" data-admin-only><i class="fa-solid fa-gear"></i> Settings</a>
+      <a href="#" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="topbar glass">
+      <div class="topbar-left">
+        <div class="breadcrumb"><span>Home</span><i class="fa-solid fa-chevron-right"></i><span>Partners</span></div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" data-tooltip="Notifications"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></button>
+        <button class="btn btn-primary btn-sm" data-modal-target="add-partner-modal" data-permission="addPartner"><i class="fa-solid fa-plus"></i> Add Partner</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="page-header fade-up">
+        <div class="page-header-left">
+          <h1>Business Partners</h1>
+          <p>Manage suppliers, retailers, and logistics providers across your network.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-file-export"></i> Export</button>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+        <div class="glass-card fade-up delay-1" style="padding:20px 22px;">
+          <div class="flex gap-2" style="margin-bottom:12px;">
+            <div class="stat-icon-box" style="background:rgba(245,158,11,0.12);color:var(--accent-amber);width:40px;height:40px;"><i class="fa-solid fa-industry"></i></div>
+            <div>
+              <div class="stat-label">Suppliers</div>
+              <div style="font-size:1.6rem;font-weight:700;" id="cnt-suppliers">—</div>
+            </div>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%;background:var(--accent-amber);"></div></div>
+          <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:6px;">3 active this month</div>
+        </div>
+        <div class="glass-card fade-up delay-2" style="padding:20px 22px;">
+          <div class="flex gap-2" style="margin-bottom:12px;">
+            <div class="stat-icon-box" style="background:rgba(16,185,129,0.12);color:var(--accent-green);width:40px;height:40px;"><i class="fa-solid fa-store"></i></div>
+            <div>
+              <div class="stat-label">Retailers</div>
+              <div style="font-size:1.6rem;font-weight:700;" id="cnt-retailers">—</div>
+            </div>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%;background:var(--accent-green);"></div></div>
+          <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:6px;">2 new partnerships</div>
+        </div>
+        <div class="glass-card fade-up delay-3" style="padding:20px 22px;">
+          <div class="flex gap-2" style="margin-bottom:12px;">
+            <div class="stat-icon-box" style="background:rgba(59,130,246,0.12);color:var(--accent-blue);width:40px;height:40px;"><i class="fa-solid fa-truck-moving"></i></div>
+            <div>
+              <div class="stat-label">Logistics Providers</div>
+              <div style="font-size:1.6rem;font-weight:700;" id="cnt-logistics">—</div>
+            </div>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%;background:var(--accent-blue);"></div></div>
+          <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:6px;">1 pending contract</div>
+        </div>
+      </div>
+
+      <!-- Partners Cards Grid -->
+      <div class="fade-up delay-2">
+        <div class="section-header" style="margin-bottom:16px;">
+          <div class="section-title">All Partners</div>
+          <div class="section-actions">
+            <div class="table-search" style="max-width:220px;">
+              <i class="fa-solid fa-search search-icon"></i>
+              <input type="text" id="partner-search" placeholder="Search partners…" oninput="filterPartners(this.value)">
+            </div>
+            <select class="filter-select" id="partner-type-f" onchange="filterPartners(document.getElementById('partner-search').value)">
+              <option value="">All Types</option>
+              <option value="Supplier">Suppliers</option>
+              <option value="Retailer">Retailers</option>
+              <option value="Logistics">Logistics</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="partners-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Partner Modal -->
+<div class="modal-overlay" id="add-partner-modal">
+  <div class="modal glass">
+    <div class="modal-header">
+      <div><div class="modal-title">Add New Partner</div><div class="modal-subtitle">Register a supplier, retailer, or logistics provider</div></div>
+      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Person Details (from EERD Person entity) -->
+    <div style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+      <i class="fa-solid fa-user" style="margin-right:6px;"></i>Contact Person
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-control" id="p-fullname" placeholder="e.g. John Smith">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" class="form-control" id="p-email" placeholder="email@company.com">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Phone Number</label>
+        <div class="input-icon-wrap">
+          <i class="fa-solid fa-phone input-prefix-icon"></i>
+          <input type="tel" class="form-control" id="p-phone" placeholder="+1 (555) 000-0000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Country</label>
+        <select class="form-control" id="p-country">
+          <option>United States</option>
+          <option>Canada</option>
+          <option>United Kingdom</option>
+          <option>Germany</option>
+          <option>China</option>
+          <option>India</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <input type="text" class="form-control" id="p-address" placeholder="Street, City, State, ZIP">
+    </div>
+
+    <!-- Company Details -->
+    <div style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+      <i class="fa-solid fa-building" style="margin-right:6px;"></i>Company Details
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Company Name</label>
+        <input type="text" class="form-control" id="p-company" placeholder="e.g. TechCorp Solutions">
+      </div>
+      <div class="form-group">
+        <label>Partner Type</label>
+        <select class="form-control" id="partner-type-select" onchange="toggleLogisticsFields(this.value)">
+          <option value="Supplier">Supplier</option>
+          <option value="Retailer">Retailer</option>
+          <option value="Logistics">Logistics Provider</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Logistics extra fields (shown only for Logistics type) -->
+    <div id="logistics-fields" style="display:none;">
+      <div style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin:12px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+        <i class="fa-solid fa-truck" style="margin-right:6px;"></i>Logistics Details
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Transport Mode</label>
+          <select class="form-control" id="l-transport">
+            <option>Road</option>
+            <option>Air</option>
+            <option>Sea</option>
+            <option>Rail</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Coverage Area</label>
+          <input type="text" class="form-control" id="l-area" placeholder="e.g. North America">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Contact Number</label>
+        <input type="tel" class="form-control" id="l-contact" placeholder="+1 (555) 000-0000">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-modal-close>Cancel</button>
+      <button class="btn btn-primary" onclick="savePartner()"><i class="fa-solid fa-check"></i> Save Partner</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/mockData.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+const session = requireAuth();
+if (session) {
+  const initials = session.username.slice(0,2).toUpperCase();
+  document.getElementById('user-avatar-initials').textContent = initials;
+  applyPermissions();
+}
+
+let allPartners = [];
+
+const typeColors = {
+  Supplier:  { bg:'rgba(245,158,11,0.1)',  color:'var(--accent-amber)',  icon:'fa-industry',     badge:'warning' },
+  Retailer:  { bg:'rgba(16,185,129,0.1)',  color:'var(--accent-green)',  icon:'fa-store',        badge:'success' },
+  Logistics: { bg:'rgba(59,130,246,0.1)',  color:'var(--accent-blue)',   icon:'fa-truck-moving', badge:'primary' },
+  SUPPLIER:  { bg:'rgba(245,158,11,0.1)',  color:'var(--accent-amber)',  icon:'fa-industry',     badge:'warning' },
+  RETAILER:  { bg:'rgba(16,185,129,0.1)',  color:'var(--accent-green)',  icon:'fa-store',        badge:'success' },
+};
+
+async function loadPartners() {
+  try {
+    const res = await fetch('http://localhost:3000/api/partners');
+    allPartners = await res.json();
+    
+    // Update counts
+    document.getElementById('cnt-suppliers').textContent = allPartners.filter(p=>p.type==='Supplier' || p.type==='SUPPLIER').length;
+    document.getElementById('cnt-retailers').textContent  = allPartners.filter(p=>p.type==='Retailer' || p.type==='RETAILER').length;
+    document.getElementById('cnt-logistics').textContent  = allPartners.filter(p=>p.type==='Logistics').length;
+    
+    renderPartners(allPartners);
+  } catch (err) {
+    console.error('Failed to load partners', err);
+  }
+}
+
+function renderPartners(list) {
+  const grid = document.getElementById('partners-grid');
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><i class="fa-solid fa-users-slash"></i><p>No partners found matching your criteria.</p></div>';
+    return;
+  }
+  list.forEach(p => {
+    const displayType = p.type === 'SUPPLIER' ? 'Supplier' : (p.type === 'RETAILER' ? 'Retailer' : p.type);
+    const c = typeColors[p.type] || typeColors.Supplier;
+    const initials = p.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    grid.innerHTML += `
+      <div class="glass-card" style="padding:20px;transition:var(--transition);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+        <div class="flex gap-3" style="margin-bottom:14px;">
+          <div style="width:46px;height:46px;border-radius:var(--radius-sm);background:${c.bg};color:${c.color};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;flex-shrink:0;">${initials}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:var(--text-sm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;">${p.id} &nbsp;·&nbsp; ${p.country || 'N/A'}</div>
+          </div>
+          <span class="badge ${c.badge}">${displayType}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px;">
+          <div class="flex gap-2" style="font-size:var(--text-xs);">
+            <i class="fa-regular fa-envelope" style="color:var(--text-muted);width:14px;"></i>
+            <span class="text-muted truncate">${p.email || 'N/A'}</span>
+          </div>
+          <div class="flex gap-2" style="font-size:var(--text-xs);">
+            <i class="fa-solid fa-phone" style="color:var(--text-muted);width:14px;"></i>
+            <span class="text-muted">${p.phone || 'N/A'}</span>
+          </div>
+          <div class="flex gap-2" style="font-size:var(--text-xs);">
+            <i class="fa-solid fa-map-location-dot" style="color:var(--text-muted);width:14px;"></i>
+            <span class="text-muted">${p.address || 'N/A'}</span>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <span class="badge success" style="margin-right:auto;">
+            <span class="badge-dot"></span>Active
+          </span>
+          <button class="btn-icon-only" data-tooltip="View Profile"><i class="fa-solid fa-eye"></i></button>
+          <button class="btn-icon-only" data-permission="editPartner" data-tooltip="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button class="btn-icon-only danger" onclick="deletePartner(${p.id})" data-permission="deletePartner" data-tooltip="Remove"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>`;
+  });
+  applyPermissions();
+}
+
+async function deletePartner(id) {
+  if (!confirm('Delete partner ' + id + '?')) return;
+  try {
+    const res = await fetch(`http://localhost:3000/api/partners/${id}`, { method: 'DELETE' });
+    if ((await res.json()).success) {
+      loadPartners();
+      alert('Partner removed');
+    }
+  } catch (err) { alert('Error removing partner'); }
+}
+
+async function savePartner() {
+  const type = document.getElementById('partner-type-select').value;
+  const data = {
+    name: document.getElementById('p-company').value,
+    type: type,
+    email: document.getElementById('p-email').value,
+    phone: document.getElementById('p-phone').value,
+    country: document.getElementById('p-country').value,
+    address: document.getElementById('p-address').value,
+    area: document.getElementById('l-area').value,
+    transportMode: document.getElementById('l-transport').value,
+    contactNumber: document.getElementById('l-contact').value
+  };
+
+  try {
+    const res = await fetch('http://localhost:3000/api/partners', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      document.getElementById('add-partner-modal').classList.remove('active');
+      loadPartners();
+      alert('Partner saved successfully!');
+    } else {
+      alert('Error saving partner: ' + result.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Failed to connect to server.');
+  }
+}
+
+function filterPartners(q) {
+  q = (q || '').toLowerCase();
+  const t = document.getElementById('partner-type-f').value;
+  renderPartners(allPartners.filter(p =>
+    (p.name + (p.id || '') + (p.country || '') + (p.email || '')).toLowerCase().includes(q) &&
+    (!t || p.type === t || (p.type === 'SUPPLIER' && t === 'Supplier') || (p.type === 'RETAILER' && t === 'Retailer'))
+  ));
+}
+
+function toggleLogisticsFields(val) {
+  document.getElementById('logistics-fields').style.display = val === 'Logistics' ? 'block' : 'none';
+}
+
+loadPartners();
+</script>
+</body>
+</html>
+
