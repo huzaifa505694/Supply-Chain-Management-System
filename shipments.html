@@ -5,270 +5,85 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shipments – ChainFlow SCM</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/design-system.css">
-<link rel="stylesheet" href="css/components.css">
+<style>
+/* ── INLINED DESIGN SYSTEM & COMPONENTS ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+:root { --bg-primary: #060b18; --bg-secondary: #0d1526; --bg-card: rgba(15, 23, 42, 0.85); --bg-hover: rgba(30, 41, 59, 0.6); --bg-input: rgba(8, 14, 28, 0.9); --accent-blue: #3b82f6; --accent-indigo: #6366f1; --accent-purple: #8b5cf6; --accent-cyan: #06b6d4; --accent-green: #10b981; --accent-amber: #f59e0b; --accent-red: #ef4444; --glow-blue: rgba(59, 130, 246, 0.35); --glow-purple: rgba(139, 92, 246, 0.35); --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #475569; --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 0.95rem; --border: rgba(255, 255, 255, 0.07); --border-light: rgba(255, 255, 255, 0.12); --border-accent: rgba(59, 130, 246, 0.3); --radius-xs: 4px; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px; --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); --sidebar-width: 250px; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg-primary); background-image: radial-gradient(ellipse at 0% 0%, rgba(59,130,246,0.07) 0%, transparent 50%), radial-gradient(ellipse at 100% 100%, rgba(139,92,246,0.07) 0%, transparent 50%); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: var(--text-base); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+.app-container { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 200; border-right: 1px solid var(--border); background: var(--bg-card); backdrop-filter: blur(20px); }
+.sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #fff; }
+.logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px var(--glow-blue); }
+.sidebar-user { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
+.sidebar-nav { flex: 1; padding: 12px; overflow-y: auto; }
+.nav-links { list-style: none; }
+.nav-item a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); transition: var(--transition); }
+.nav-item.active a { background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(99,102,241,0.15)); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.18); }
+.main-content { flex: 1; margin-left: var(--sidebar-width); }
+.topbar { position: sticky; top: 0; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(6, 11, 24, 0.85); backdrop-filter: blur(20px); z-index: 100; }
+.page-content { padding: 28px 32px; }
+.glass-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: var(--transition); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 12px; font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 12px; font-size: var(--text-sm); border-bottom: 1px solid var(--border); }
+.badge { padding: 3px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+.badge.primary { background: rgba(59,130,246,0.12); color: #60a5fa; }
+.badge.success { background: rgba(16,185,129,0.12); color: #34d399; }
+.badge.warning { background: rgba(245,158,11,0.12); color: #fbbf24; }
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: var(--radius-sm); font-size: var(--text-sm); font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo)); color: #fff; }
+</style>
 </head>
 <body>
 <div class="app-container">
-
-  <nav class="sidebar glass">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">
-        <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-        <div>ChainFlow<span class="logo-subtitle">Supply Chain Management</span></div>
-      </div>
-    </div>
-    <div class="sidebar-user">
-      <div class="user-avatar" id="user-avatar-initials">--</div>
-      <div class="user-info"><div class="user-name" id="sidebar-username">Loading...</div><div class="user-role" id="sidebar-role">—</div></div>
-      <span class="badge primary" id="role-tag" style="font-size:0.6rem;padding:2px 7px;"></span>
-    </div>
+  <nav class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>ChainFlow</div></div>
+    <div class="sidebar-user"><div class="user-avatar" id="ua">--</div><div class="un">Loading...</div></div>
     <div class="sidebar-nav">
-      <div class="nav-section-label">Main Menu</div>
       <ul class="nav-links">
         <li class="nav-item"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products <span class="nav-badge">2</span></a></li>
+        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a></li>
         <li class="nav-item"><a href="orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Orders</a></li>
-        <li class="nav-item active"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments <span class="nav-badge">1</span></a></li>
+        <li class="nav-item active"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments</a></li>
         <li class="nav-item"><a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a></li>
       </ul>
-      <div class="nav-section-label" style="margin-top:8px;">Management</div>
-      <ul class="nav-links">
-        <li class="nav-item"><a href="warehouses.html"><i class="fa-solid fa-warehouse"></i> Warehouses</a></li>
-        <li class="nav-item" data-admin-only><a href="analytics.html"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
-        <li class="nav-item" data-admin-only><a href="reports.html"><i class="fa-solid fa-file-export"></i> Reports</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-footer">
-      <a href="#" data-admin-only><i class="fa-solid fa-gear"></i> Settings</a>
-      <a href="#" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
     </div>
   </nav>
 
   <div class="main-content">
-    <div class="topbar glass">
-      <div class="topbar-left">
-        <div class="breadcrumb"><span>Home</span><i class="fa-solid fa-chevron-right"></i><span>Shipment Tracking</span></div>
-      </div>
-      <div class="topbar-right">
-        <button class="topbar-icon-btn" data-tooltip="Notifications"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></button>
-        <button class="btn btn-primary btn-sm" data-modal-target="create-shipment-modal" data-permission="addShipment"><i class="fa-solid fa-plus"></i> Create Shipment</button>
-      </div>
-    </div>
-
+    <div class="topbar"><div>Live Shipments</div><button class="btn btn-primary" onclick="location.reload()">Refresh Data</button></div>
     <div class="page-content">
-      <div class="page-header fade-up">
-        <div class="page-header-left">
-          <h1>Logistics & Tracking</h1>
-          <p>Monitor real-time delivery status, tracking numbers, and shipping performance.</p>
-        </div>
-        <div class="header-actions">
-          <button class="btn btn-secondary btn-sm" onclick="loadShipments()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-          <button class="btn btn-secondary btn-sm" data-admin-only><i class="fa-solid fa-file-export"></i> Export</button>
-        </div>
-      </div>
-
-      <!-- Stats Cards -->
-      <div class="stats-grid fade-up delay-1">
-        <div class="glass-card stat-card">
-          <div class="stat-top">
-            <div class="stat-label">Total Shipments</div>
-            <div class="stat-icon-box" style="background:rgba(59,130,246,0.12);color:var(--accent-blue);"><i class="fa-solid fa-truck-moving"></i></div>
-          </div>
-          <div class="stat-value" id="sh-total">—</div>
-          <div class="stat-change">Live database metrics</div>
-        </div>
-        <div class="glass-card stat-card">
-          <div class="stat-top">
-            <div class="stat-label">In Transit</div>
-            <div class="stat-icon-box" style="background:rgba(245,158,11,0.12);color:var(--accent-amber);"><i class="fa-solid fa-spinner"></i></div>
-          </div>
-          <div class="stat-value" id="sh-transit">—</div>
-          <div class="stat-change">Deliveries in progress</div>
-        </div>
-        <div class="glass-card stat-card">
-          <div class="stat-top">
-            <div class="stat-label">Delivered</div>
-            <div class="stat-icon-box" style="background:rgba(16,185,129,0.12);color:var(--accent-green);"><i class="fa-solid fa-circle-check"></i></div>
-          </div>
-          <div class="stat-value" id="sh-delivered">—</div>
-          <div class="stat-change text-accent">Goal: 100%</div>
-        </div>
-        <div class="glass-card stat-card">
-          <div class="stat-top">
-            <div class="stat-label">Expedited</div>
-            <div class="stat-icon-box" style="background:rgba(139,92,246,0.12);color:var(--accent-purple);"><i class="fa-solid fa-bolt"></i></div>
-          </div>
-          <div class="stat-value" id="sh-overnight">—</div>
-          <div class="stat-change">Overnight shipping</div>
-        </div>
-      </div>
-
-      <!-- Shipments Table -->
-      <div class="glass-card fade-up delay-2" style="margin-top:24px;">
-        <div class="table-toolbar">
-          <div class="table-search">
-            <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="ship-search" placeholder="Search tracking, order…" oninput="filterShip()">
-          </div>
-          <div class="filter-group">
-            <select class="filter-select" id="ship-type-f" onchange="filterShip()">
-              <option value="">All Types</option>
-              <option value="DAY">Standard</option>
-              <option value="OVERNIGHT">Express</option>
-            </select>
-            <select class="filter-select" id="ship-status-f" onchange="filterShip()">
-              <option value="">All Status</option>
-              <option value="Preparing">Preparing</option>
-              <option value="In Transit">In Transit</option>
-              <option value="Delivered">Delivered</option>
-            </select>
-          </div>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Tracking #</th>
-                <th>ID</th>
-                <th>Order</th>
-                <th>Provider</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th style="width:100px;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="ship-body"></tbody>
-          </table>
-        </div>
-        <div class="table-pagination">
-          <span class="pagination-info" id="ship-info">Showing 0 shipments</span>
-          <div class="pagination-controls">
-            <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-        </div>
+      <div class="glass-card">
+        <table>
+          <thead><tr><th>Tracking #</th><th>Origin</th><th>Destination</th><th>Status</th><th>ETA</th></tr></thead>
+          <tbody id="ship-body"></tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Track Modal -->
-<div class="modal-overlay" id="track-modal">
-  <div class="modal glass">
-    <div class="modal-header">
-      <div><div class="modal-title">Live Tracking</div><div class="modal-subtitle" id="track-subtitle">TRK-000000</div></div>
-      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div id="timeline" style="margin-top:20px;"></div>
-    <div class="modal-footer">
-      <button class="btn btn-primary" data-modal-close>Close</button>
-    </div>
-  </div>
-</div>
-
-<script src="js/auth.js"></script>
-<script src="js/main.js"></script>
 <script>
-const session = requireAuth();
-if (session) {
-  document.getElementById('sidebar-username').textContent = session.username;
-  document.getElementById('sidebar-role').textContent = session.role === 'admin' ? 'Administrator' : 'Operator';
-  document.getElementById('user-avatar-initials').textContent = session.username.slice(0,2).toUpperCase();
-  applyPermissions();
-}
+const AUTH_KEY = 'chainflow_auth';
+const API = 'https://full-boxes-stop.loca.lt/api';
+function getSession() { return JSON.parse(localStorage.getItem(AUTH_KEY)); }
+const s = getSession(); if(!s) location.href='login.html';
+document.getElementById('ua').textContent = s.username.slice(0,2).toUpperCase();
+document.querySelector('.un').textContent = s.username;
 
-let allShipments = [];
-
-async function loadShipments() {
-  try {
-    const res = await fetch('http://localhost:3000/api/shipments');
-    allShipments = await res.json();
-    
-    document.getElementById('sh-total').textContent = allShipments.length;
-    document.getElementById('sh-transit').textContent = allShipments.filter(s => s.status === 'In Transit').length;
-    document.getElementById('sh-delivered').textContent = allShipments.filter(s => s.status === 'Delivered').length;
-    document.getElementById('sh-overnight').textContent = allShipments.filter(s => s.type === 'OVERNIGHT').length;
-    
-    renderShip(allShipments);
-  } catch (err) { console.error(err); }
-}
-
-function renderShip(list) {
+async function load() {
+  const res = await fetch(`${API}/shipments`);
+  const data = await res.json();
   const b = document.getElementById('ship-body');
-  b.innerHTML = '';
-  list.forEach(s => {
-    const date = s.date ? new Date(s.date).toLocaleDateString() : 'Pending';
-    b.innerHTML += `
-      <tr>
-        <td class="font-mono fw-600" style="color:var(--accent-cyan)">${s.tracking}</td>
-        <td class="text-muted">#${s.id}</td>
-        <td><span class="badge primary">ORD-${s.orderId}</span></td>
-        <td>${s.provider || 'Global Link'}</td>
-        <td class="text-muted">${date}</td>
-        <td><span class="badge ${s.type==='OVERNIGHT'?'purple':'cyan'}">${s.type}</span></td>
-        <td>${getStatusBadge(s.status)}</td>
-        <td>
-          <div class="flex gap-1">
-            <button class="btn-icon-only" onclick="openTracker('${s.tracking}')" data-tooltip="Track"><i class="fa-solid fa-location-crosshairs"></i></button>
-            <button class="btn-icon-only danger" onclick="deleteShipment(${s.id})" data-permission="deleteShipment" data-tooltip="Delete"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </td>
-      </tr>`;
+  data.forEach(s => {
+    b.innerHTML += `<tr><td><span style="font-family:monospace;color:var(--accent-blue);">TRK-${s.id}</span></td><td>${s.origin || 'Warehouse-01'}</td><td>${s.destination || 'Retail-X'}</td><td><span class="badge success">${s.status}</span></td><td>${s.shipment_date || 'In Transit'}</td></tr>`;
   });
-  document.getElementById('ship-info').textContent = `Showing ${list.length} shipments`;
-  applyPermissions();
 }
-
-function openTracker(trk) {
-  document.getElementById('track-subtitle').textContent = trk;
-  const tl = document.getElementById('timeline');
-  tl.innerHTML = '';
-  const steps = [
-    { label: 'Order Confirmed', time: '2 days ago', done: true },
-    { label: 'Picked Up', time: 'Yesterday', done: true },
-    { label: 'In Transit', time: 'Today, 10:00 AM', done: true, active: true },
-    { label: 'Out for Delivery', time: 'Estimated Tomorrow', done: false }
-  ];
-  steps.forEach((s, i) => {
-    tl.innerHTML += `
-      <div class="flex gap-3" style="margin-bottom:20px; position:relative;">
-        <div style="width:24px; height:24px; border-radius:50%; background:${s.active?'var(--accent-blue)':s.done?'var(--accent-green)':'var(--border)'}; display:flex; align-items:center; justify-content:center; font-size:0.7rem; z-index:2;">
-          <i class="fa-solid ${s.done?'fa-check':'fa-clock'}"></i>
-        </div>
-        ${i < steps.length-1 ? `<div style="position:absolute; left:11px; top:24px; bottom:-20px; width:2px; background:var(--border);"></div>` : ''}
-        <div>
-          <div style="font-size:var(--text-sm); font-weight:600; color:${s.active?'var(--accent-blue)':s.done?'var(--text-primary)':'var(--text-muted)'}">${s.label}</div>
-          <div style="font-size:0.7rem; color:var(--text-muted);">${s.time}</div>
-        </div>
-      </div>`;
-  });
-  document.getElementById('track-modal').classList.add('active');
-}
-
-async function deleteShipment(id) {
-  if (!confirm('Delete shipment #' + id + '?')) return;
-  try {
-    const res = await fetch('http://localhost:3000/api/shipments/' + id, { method: 'DELETE' });
-    if ((await res.json()).success) loadShipments();
-  } catch (err) { alert('Error deleting shipment'); }
-}
-
-function filterShip() {
-  const q = document.getElementById('ship-search').value.toLowerCase();
-  const t = document.getElementById('ship-type-f').value;
-  const s = document.getElementById('ship-status-f').value;
-  const filtered = allShipments.filter(sh => 
-    (sh.tracking + String(sh.orderId)).toLowerCase().includes(q) &&
-    (!t || sh.type === t) &&
-    (!s || sh.status === s)
-  );
-  renderShip(filtered);
-}
-
-loadShipments();
+load();
 </script>
 </body>
 </html>

@@ -5,35 +5,90 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard – ChainFlow SCM</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/design-system.css">
-<link rel="stylesheet" href="css/components.css">
+<style>
+/* ── DESIGN SYSTEM ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+:root {
+    --bg-primary: #060b18; --bg-secondary: #0d1526; --bg-card: rgba(15, 23, 42, 0.85); --bg-hover: rgba(30, 41, 59, 0.6); --bg-input: rgba(8, 14, 28, 0.9);
+    --accent-blue: #3b82f6; --accent-indigo: #6366f1; --accent-purple: #8b5cf6; --accent-cyan: #06b6d4; --accent-green: #10b981; --accent-amber: #f59e0b; --accent-red: #ef4444;
+    --glow-blue: rgba(59, 130, 246, 0.35); --glow-purple: rgba(139, 92, 246, 0.35);
+    --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #475569; --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 0.95rem;
+    --border: rgba(255, 255, 255, 0.07); --border-light: rgba(255, 255, 255, 0.12); --border-accent: rgba(59, 130, 246, 0.3);
+    --radius-xs: 4px; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3); --shadow-md: 0 4px 20px rgba(0,0,0,0.4); --shadow-lg: 0 8px 40px rgba(0,0,0,0.5); --shadow-glow: 0 0 30px var(--glow-blue);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --sidebar-width: 250px;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg-primary); background-image: radial-gradient(ellipse at 0% 0%, rgba(59,130,246,0.07) 0%, transparent 50%), radial-gradient(ellipse at 100% 100%, rgba(139,92,246,0.07) 0%, transparent 50%); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: var(--text-base); line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+::-webkit-scrollbar { width: 5px; height: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+.glass { background: var(--bg-card); backdrop-filter: blur(20px) saturate(180%); border: 1px solid var(--border); }
+.glass-card { background: var(--bg-card); backdrop-filter: blur(20px) saturate(180%); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); transition: var(--transition); }
+.glass-card:hover { border-color: var(--border-light); box-shadow: var(--shadow-lg); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.fade-up { animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.delay-1 { animation-delay: 0.08s; } .delay-2 { animation-delay: 0.16s; } .delay-3 { animation-delay: 0.24s; }
+
+/* ── COMPONENTS ── */
+.app-container { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 200; border-right: 1px solid var(--border); padding: 0; overflow: hidden; }
+.sidebar-header { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+.logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #fff; box-shadow: 0 4px 12px var(--glow-blue); }
+.sidebar-user { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; cursor: pointer; transition: var(--transition); }
+.user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: #fff; border: 2px solid rgba(255,255,255,0.15); }
+.user-name { font-size: 0.82rem; font-weight: 600; } .user-role { font-size: 0.72rem; color: var(--text-muted); }
+.sidebar-nav { flex: 1; padding: 12px 12px; overflow-y: auto; }
+.nav-section-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); padding: 12px 10px 6px; }
+.nav-links { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.nav-item a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: var(--text-sm); transition: var(--transition); }
+.nav-item.active a { background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(99,102,241,0.15)); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.18); }
+.main-content { flex: 1; margin-left: var(--sidebar-width); display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 100; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(6, 11, 24, 0.85); backdrop-filter: blur(20px); }
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--text-muted); }
+.page-content { padding: 28px 32px; flex: 1; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 24px; }
+.stat-card { padding: 22px; position: relative; overflow: hidden; transition: var(--transition); }
+.stat-value { font-size: 2rem; font-weight: 700; letter-spacing: -0.04em; }
+.table-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); gap: 12px; }
+.table-search input { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px 8px 34px; color: var(--text-primary); font-size: var(--text-sm); }
+table { width: 100%; border-collapse: separate; border-spacing: 0; }
+th { padding: 12px 16px; font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+td { padding: 14px 16px; font-size: var(--text-sm); border-bottom: 1px solid var(--border); }
+.badge { padding: 3px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
+.badge.success { background: rgba(16,185,129,0.12); color: #34d399; }
+.badge.warning { background: rgba(245,158,11,0.12); color: #fbbf24; }
+.badge.danger { background: rgba(239,68,68,0.12); color: #f87171; }
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: var(--radius-sm); font-size: var(--text-sm); font-weight: 500; cursor: pointer; border: none; transition: var(--transition); }
+.btn-primary { background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo)); color: #fff; box-shadow: 0 4px 14px var(--glow-blue); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-overlay.active { display: flex; }
+.modal { width: 100%; max-width: 520px; border-radius: var(--radius-lg); padding: 28px; background: var(--bg-card); border: 1px solid var(--border); }
+</style>
 </head>
 <body>
 <div class="app-container">
-
-  <!-- ═══ SIDEBAR ═══ -->
   <nav class="sidebar glass">
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-        <div>ChainFlow<span class="logo-subtitle">Supply Chain Management</span></div>
+        <div>ChainFlow<span class="logo-subtitle" style="display:block;font-size:0.65rem;font-weight:400;color:var(--text-muted);text-transform:uppercase;">Supply Chain Management</span></div>
       </div>
     </div>
     <div class="sidebar-user">
       <div class="user-avatar" id="user-avatar-initials">--</div>
-      <div class="user-info">
-        <div class="user-name" id="sidebar-username">Loading...</div>
-        <div class="user-role" id="sidebar-role">—</div>
-      </div>
+      <div class="user-info"><div class="user-name">Loading...</div><div class="user-role">—</div></div>
       <span class="badge primary" id="role-tag" style="font-size:0.6rem;padding:2px 7px;"></span>
     </div>
     <div class="sidebar-nav">
       <div class="nav-section-label">Main Menu</div>
       <ul class="nav-links">
         <li class="nav-item active"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products <span class="nav-badge">2</span></a></li>
+        <li class="nav-item"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a></li>
         <li class="nav-item"><a href="orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Orders</a></li>
-        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments <span class="nav-badge">1</span></a></li>
+        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments</a></li>
         <li class="nav-item"><a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a></li>
       </ul>
       <div class="nav-section-label" style="margin-top:8px;">Management</div>
@@ -43,320 +98,147 @@
         <li class="nav-item" data-admin-only><a href="reports.html"><i class="fa-solid fa-file-export"></i> Reports</a></li>
       </ul>
     </div>
-    <div class="sidebar-footer">
-      <a href="#" data-admin-only><i class="fa-solid fa-gear"></i> Settings</a>
-      <a href="#" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+    <div class="sidebar-footer" style="padding:12px;border-top:1px solid var(--border);">
+      <a href="#" onclick="signOut()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--text-muted);font-size:var(--text-sm);"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
     </div>
   </nav>
 
-  <!-- ═══ MAIN ═══ -->
   <div class="main-content">
     <div class="topbar glass">
-      <div class="topbar-left">
-        <div class="breadcrumb">
-          <span>ChainFlow</span><i class="fa-solid fa-chevron-right"></i><span>Dashboard</span>
-        </div>
-        <div class="topbar-search">
-          <i class="fa-solid fa-search search-icon"></i>
-          <input type="text" placeholder="Search orders, products, shipments...">
-        </div>
-      </div>
+      <div class="topbar-left"><div class="breadcrumb"><span>Home</span><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;margin:0 8px;"></i><span>Dashboard</span></div></div>
       <div class="topbar-right">
-        <button class="topbar-icon-btn" data-tooltip="Notifications">
-          <i class="fa-regular fa-bell"></i>
-          <span class="notif-dot"></span>
-        </button>
-        <button class="topbar-icon-btn" data-tooltip="Refresh">
-          <i class="fa-solid fa-rotate"></i>
-        </button>
-        <button class="btn btn-primary btn-sm" data-modal-target="quick-order-modal" data-permission="addOrder">
-          <i class="fa-solid fa-plus"></i> New Order
-        </button>
+        <button class="btn btn-primary btn-sm" data-modal-target="quick-order-modal"><i class="fa-solid fa-plus"></i> New Order</button>
       </div>
     </div>
 
     <div class="page-content">
-      <!-- Role Banner for non-admin -->
-      <div id="role-banner" style="display:none;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 16px;margin-bottom:20px;align-items:center;gap:10px;font-size:var(--text-sm);">
-        <i class="fa-solid fa-circle-info" style="color:var(--accent-green);"></i>
-        <span>You are signed in as <strong>Operator</strong>. Some features are view-only.</span>
-      </div>
-
       <div class="page-header fade-up">
-        <div class="page-header-left">
-          <h1>Dashboard Overview</h1>
-          <p id="topbar-date">Thursday, May 1, 2026 &nbsp;·&nbsp; Last synced 2 min ago</p>
+        <h1>Dashboard Overview</h1>
+        <p style="color:var(--text-secondary);font-size:var(--text-sm);margin-top:4px;">Real-time supply chain monitoring and performance metrics.</p>
+      </div>
+      
+      <div class="stats-grid fade-up delay-1">
+        <div class="glass-card stat-card">
+          <div class="stat-label" style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;">Total Products</div>
+          <div class="stat-value" id="stat-products">0</div>
         </div>
-        <div class="header-actions">
-          <button class="btn btn-secondary btn-sm" data-admin-only><i class="fa-solid fa-file-export"></i> Export</button>
-          <button class="btn btn-secondary btn-sm"><i class="fa-regular fa-calendar"></i> This Month</button>
+        <div class="glass-card stat-card">
+          <div class="stat-label" style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;">Active Orders</div>
+          <div class="stat-value" id="stat-orders">0</div>
+        </div>
+        <div class="glass-card stat-card">
+          <div class="stat-label" style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;">Live Shipments</div>
+          <div class="stat-value" id="stat-shipments">0</div>
+        </div>
+        <div class="glass-card stat-card">
+          <div class="stat-label" style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;">Low Stock Alerts</div>
+          <div class="stat-value" id="stat-low-stock" style="color:var(--accent-red);">0</div>
         </div>
       </div>
 
-      <!-- Stats Grid -->
-      <div class="stats-grid">
-        <div class="stat-card glass-card fade-up delay-1">
-          <div class="stat-top">
-            <div class="stat-label">Total Products</div>
-            <div class="stat-icon-box" style="background:rgba(59,130,246,0.12);color:var(--accent-blue);"><i class="fa-solid fa-box-open"></i></div>
-          </div>
-          <div class="stat-value">637</div>
-          <div class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +12 this week</div>
+      <div class="glass-card fade-up delay-2" style="padding:20px;">
+        <div style="font-weight:600;margin-bottom:16px;">Recent Inventory Activity</div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Product</th><th>Status</th><th>Stock</th><th>Location</th></tr></thead>
+            <tbody id="inventory-body"></tbody>
+          </table>
         </div>
-        <div class="stat-card glass-card fade-up delay-2">
-          <div class="stat-top">
-            <div class="stat-label">Total Orders</div>
-            <div class="stat-icon-box" style="background:rgba(16,185,129,0.12);color:var(--accent-green);"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-          </div>
-          <div class="stat-value">1,284</div>
-          <div class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +84 this month</div>
-        </div>
-        <div class="stat-card glass-card fade-up delay-3">
-          <div class="stat-top">
-            <div class="stat-label">Active Shipments</div>
-            <div class="stat-icon-box" style="background:rgba(139,92,246,0.12);color:var(--accent-purple);"><i class="fa-solid fa-truck-fast"></i></div>
-          </div>
-          <div class="stat-value">38</div>
-          <div class="stat-change down"><i class="fa-solid fa-arrow-trend-down"></i> -3 from yesterday</div>
-        </div>
-        <div class="stat-card glass-card fade-up delay-4">
-          <div class="stat-top">
-            <div class="stat-label">Low Stock Alerts</div>
-            <div class="stat-icon-box" style="background:rgba(245,158,11,0.12);color:var(--accent-amber);"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          </div>
-          <div class="stat-value">7</div>
-          <div class="stat-change" style="color:var(--accent-amber);"><i class="fa-solid fa-circle-exclamation"></i> Needs attention</div>
-        </div>
-      </div>
-
-      <!-- Two column -->
-      <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;margin-bottom:20px;">
-        <div class="glass-card fade-up delay-2">
-          <div class="table-toolbar">
-            <div class="section-title">Recent Orders</div>
-            <div class="flex gap-2">
-              <div class="table-search" style="max-width:180px;">
-                <i class="fa-solid fa-search search-icon"></i>
-                <input type="text" id="order-search" placeholder="Search…" oninput="filterTable()">
-              </div>
-              <select class="filter-select" id="order-status-filter" onchange="filterTable()">
-                <option value="">All Status</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Processing">Processing</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <a href="orders.html" class="btn btn-ghost btn-sm">View All</a>
-            </div>
-          </div>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Order ID</th><th>Retailer</th><th>Date</th><th>Amount</th><th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="orders-body"></tbody>
-            </table>
-          </div>
-          <div class="table-pagination">
-            <span class="pagination-info" id="orders-page-info">—</span>
-            <div class="pagination-controls">
-              <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="glass-card fade-up delay-3">
-          <div style="padding:18px 20px;border-bottom:1px solid var(--border);"><div class="section-title">Live Activity</div></div>
-          <div style="padding:8px 16px;" id="activity-feed"></div>
-        </div>
-      </div>
-
-      <!-- Warehouse Capacity -->
-      <div class="glass-card fade-up delay-4">
-        <div style="padding:18px 20px 14px;border-bottom:1px solid var(--border);"><div class="section-title">Warehouse Capacity</div></div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;" id="warehouse-grid"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- New Order Modal -->
+<!-- Quick Order Modal -->
 <div class="modal-overlay" id="quick-order-modal">
-  <div class="modal glass">
-    <div class="modal-header">
-      <div><div class="modal-title">Create New Order</div><div class="modal-subtitle">Place a new retailer order</div></div>
-      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+  <div class="modal">
+    <div style="font-weight:700;font-size:1.1rem;margin-bottom:20px;">Create Quick Order</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <select class="glass" id="retailer-select" style="padding:10px;border-radius:8px;color:white;background:var(--bg-input);border:1px solid var(--border);"></select>
+      <select class="glass" id="product-select" style="padding:10px;border-radius:8px;color:white;background:var(--bg-input);border:1px solid var(--border);"></select>
+      <input type="number" id="order-qty" placeholder="Quantity" style="padding:10px;border-radius:8px;color:white;background:var(--bg-input);border:1px solid var(--border);">
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Retailer</label>
-        <select class="form-control"><option>TechCorp Solutions</option><option>DataCenter Systems</option><option>Global Networks</option></select>
-      </div>
-      <div class="form-group">
-        <label>Order Date</label>
-        <input type="date" class="form-control" value="2026-05-01">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Product</label>
-        <select class="form-control"><option>Industrial Processor X-1</option><option>Server Rack 42U</option><option>Gigabit Switch 48-Port</option></select>
-      </div>
-      <div class="form-group">
-        <label>Quantity</label>
-        <div class="input-icon-wrap">
-          <i class="fa-solid fa-hashtag input-prefix-icon"></i>
-          <input type="number" class="form-control" value="1" min="1">
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Notes (optional)</label>
-      <textarea class="form-control" rows="2" placeholder="Any special delivery instructions…"></textarea>
-    </div>
-    <div class="modal-footer">
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
       <button class="btn btn-secondary" data-modal-close>Cancel</button>
-      <button class="btn btn-primary">
-        <i class="fa-solid fa-check"></i> Place Order
-      </button>
+      <button class="btn btn-primary" onclick="placeQuickOrder()">Place Order</button>
     </div>
   </div>
 </div>
 
-<script src="js/mockData.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/main.js"></script>
 <script>
-const session = requireAuth();
-if (session) {
-  const initials = session.username.slice(0,2).toUpperCase();
-  document.getElementById('user-avatar-initials').textContent = initials;
-  applyPermissions();
-  if (session.role !== 'admin') {
-    document.getElementById('role-banner').style.display = 'flex';
-  }
+/* ── AUTH & ROLE MANAGER ── */
+const AUTH_KEY = 'chainflow_auth';
+const ROLES = { admin: { label: 'Administrator', permissions: { viewDashboard: true, viewProducts: true, addProduct: true, editProduct: true, deleteProduct: true, viewOrders: true, addOrder: true, editOrder: true, deleteOrder: true, viewShipments: true, addShipment: true, editShipment: true, deleteShipment: true, viewPartners: true, addPartner: true, editPartner: true, deletePartner: true, viewWarehouses: true, addWarehouse: true, viewAnalytics: true, viewReports: true, viewSettings: true } }, user: { label: 'Operator', permissions: { viewDashboard: true, viewProducts: true, addOrder: true, viewOrders: true, viewShipments: true, viewPartners: true, viewWarehouses: true } } };
+function getSession() { try { return JSON.parse(localStorage.getItem(AUTH_KEY)); } catch { return null; } }
+function setSession(username, role) { localStorage.setItem(AUTH_KEY, JSON.stringify({ username, role, loginTime: new Date().toISOString() })); }
+function signOut() { localStorage.removeItem(AUTH_KEY); window.location.href = 'login.html'; }
+function requireAuth() { const s = getSession(); if (!s) { window.location.href = 'login.html'; return null; } return s; }
+function can(p) { const s = getSession(); return s && ROLES[s.role]?.permissions[p]; }
+function applyPermissions() {
+  const s = getSession(); if (!s) return;
+  document.querySelectorAll('.user-name').forEach(el => el.textContent = s.username);
+  document.querySelectorAll('.user-role').forEach(el => el.textContent = ROLES[s.role]?.label);
+  const tag = document.getElementById('role-tag'); if (tag) { tag.textContent = ROLES[s.role]?.label; tag.className = 'badge ' + (s.role === 'admin' ? 'primary' : 'success'); }
+  document.querySelectorAll('[data-permission]').forEach(el => { if (!can(el.getAttribute('data-permission'))) el.style.display = 'none'; });
+  if (s.role !== 'admin') document.querySelectorAll('[data-admin-only]').forEach(el => el.style.display = 'none');
 }
 
-async function loadDashboard() {
-  try {
-    // 1. Stats
-    const statsRes = await fetch('http://localhost:3000/api/stats');
-    const stats = await statsRes.json();
-    document.querySelectorAll('.stat-value')[0].textContent = stats.products;
-    document.querySelectorAll('.stat-value')[1].textContent = stats.orders;
-    document.querySelectorAll('.stat-value')[2].textContent = stats.shipments;
-    document.querySelectorAll('.stat-value')[3].textContent = stats.lowStock;
-
-    // 2. Recent Orders
-    const ordersRes = await fetch('http://localhost:3000/api/orders');
-    const allOrders = await ordersRes.json();
-    renderOrders(allOrders.slice(0, 5));
-
-    // 3. Warehouse Capacity
-    const whRes = await fetch('http://localhost:3000/api/warehouses');
-    const warehouses = await whRes.json();
-    const wgrid = document.getElementById('warehouse-grid');
-    wgrid.innerHTML = '';
-    warehouses.forEach((w, i) => {
-      const color = w.capacity > 85 ? 'var(--accent-red)' : 'var(--accent-blue)';
-      wgrid.innerHTML += `
-        <div style="padding:18px 22px;${i < warehouses.length - 1 ? 'border-right:1px solid var(--border);' : ''}">
-          <div class="flex gap-2" style="margin-bottom:12px;">
-            <div class="stat-icon-box" style="background:rgba(59,130,246,0.1);color:var(--accent-blue);width:34px;height:34px;"><i class="fa-solid fa-warehouse"></i></div>
-            <div>
-              <div style="font-weight:600;font-size:var(--text-sm)">${w.name}</div>
-              <div style="font-size:var(--text-xs);color:var(--text-muted)">${w.id} · ${w.location}</div>
-            </div>
-            <span class="badge primary ml-auto">${w.type}</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);margin-bottom:6px;">
-            <span class="text-muted">Manager: ${w.manager}</span>
-            <span style="font-weight:600;color:${color}">${w.capacity}%</span>
-          </div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${w.capacity}%;background:${color};"></div></div>
-        </div>`;
-    });
-
-    // Populate New Order dropdowns
-    const partnersRes = await fetch('http://localhost:3000/api/partners');
-    const partners = await partnersRes.json();
-    const retSelect = document.querySelector('#quick-order-modal select');
-    retSelect.innerHTML = partners.filter(p => p.type === 'RETAILER').map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-
-    const prodsRes = await fetch('http://localhost:3000/api/products');
-    const products = await prodsRes.json();
-    const prodSelect = document.querySelectorAll('#quick-order-modal select')[1];
-    prodSelect.innerHTML = products.map(p => `<option value="${p.id}">${p.name} ($${p.price})</option>`).join('');
-
-  } catch (err) { console.error('Dashboard Load Error:', err); }
+/* ── MAIN UTILITIES ── */
+function getStatusBadge(s) {
+  s = s.toLowerCase(); let t = 'primary';
+  if (s.includes('delivered') || s.includes('in stock') || s.includes('shipped')) t = 'success';
+  else if (s.includes('pending') || s.includes('low stock') || s.includes('processing')) t = 'warning';
+  else if (s.includes('out of stock') || s.includes('failed')) t = 'danger';
+  return `<span class="badge ${t}">${s}</span>`;
 }
-
-function renderOrders(list) {
-  const b = document.getElementById('orders-body');
-  b.innerHTML = '';
-  list.forEach(o => {
-    b.innerHTML += `
-      <tr>
-        <td class="font-mono fw-600" style="color:var(--accent-blue)">${o.id}</td>
-        <td>${o.retailer}</td>
-        <td class="text-muted">${o.date}</td>
-        <td class="fw-600">$${Number(o.amount).toLocaleString('en-US',{minimumFractionDigits:2})}</td>
-        <td>${getStatusBadge(o.status || 'Processing')}</td>
-      </tr>`;
-  });
-}
-
-async function placeOrder() {
-  const modal = document.getElementById('quick-order-modal');
-  const retailerId = modal.querySelectorAll('select')[0].value;
-  const productId = modal.querySelectorAll('select')[1].value;
-  const quantity = modal.querySelector('input[type="number"]').value;
-  
-  // Find price
-  const res = await fetch('http://localhost:3000/api/products');
-  const products = await res.json();
-  const p = products.find(x => x.id == productId);
-  const amount = p ? p.price * quantity : 0;
-
-  try {
-    const res = await fetch('http://localhost:3000/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ retailerId, productId, quantity, amount })
-    });
-    if ((await res.json()).success) {
-      modal.classList.remove('active');
-      loadDashboard();
-      alert('Order placed successfully!');
-    }
-  } catch (err) { alert('Error placing order'); }
-}
-
-// Activity Feed (Keep static or derive from orders)
-const activities = [
-  { icon:'fa-plus', color:'var(--accent-green)', bg:'rgba(16,185,129,0.12)', text:'New order <b>ORD-1027</b> placed', time:'2 min ago' },
-  { icon:'fa-truck-fast', color:'var(--accent-blue)', bg:'rgba(59,130,246,0.12)', text:'Shipment <b>SHP-8821</b> dispatched', time:'14 min ago' },
-  { icon:'fa-triangle-exclamation', color:'var(--accent-amber)', bg:'rgba(245,158,11,0.12)', text:'<b>Server Rack 42U</b> low stock', time:'1 hr ago' },
-];
-const feed = document.getElementById('activity-feed');
-activities.forEach(a => {
-  feed.innerHTML += `
-    <div class="activity-item">
-      <div class="activity-icon" style="background:${a.bg};color:${a.color}"><i class="fa-solid ${a.icon}"></i></div>
-      <div class="activity-body">
-        <div class="activity-title">${a.text}</div>
-        <div class="activity-time">${a.time}</div>
-      </div>
-    </div>`;
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-modal-target]').forEach(t => t.onclick = () => document.getElementById(t.getAttribute('data-modal-target')).classList.add('active'));
+  document.querySelectorAll('[data-modal-close]').forEach(c => c.onclick = () => c.closest('.modal-overlay').classList.remove('active'));
 });
 
-loadDashboard();
-document.querySelector('#quick-order-modal .btn-primary').onclick = placeOrder;
+/* ── DASHBOARD LOGIC ── */
+const API = 'https://full-boxes-stop.loca.lt/api';
+const session = requireAuth();
+if (session) applyPermissions();
+
+async function init() {
+  try {
+    const [stats, products, partners] = await Promise.all([
+      fetch(`${API}/stats`).then(r => r.json()),
+      fetch(`${API}/products`).then(r => r.json()),
+      fetch(`${API}/partners`).then(r => r.json())
+    ]);
+    document.getElementById('stat-products').textContent = stats.products;
+    document.getElementById('stat-orders').textContent = stats.orders;
+    document.getElementById('stat-shipments').textContent = stats.shipments;
+    document.getElementById('stat-low-stock').textContent = stats.lowStock;
+    
+    const b = document.getElementById('inventory-body');
+    products.slice(0, 6).forEach(p => {
+      b.innerHTML += `<tr><td>${p.name}</td><td>${getStatusBadge(p.stock > 10 ? 'In Stock' : 'Low Stock')}</td><td>${p.stock}</td><td class="text-muted">${p.warehouse || 'Central'}</td></tr>`;
+    });
+
+    document.getElementById('retailer-select').innerHTML = partners.filter(p => p.type==='RETAILER').map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+    document.getElementById('product-select').innerHTML = products.map(p => `<option value="${p.id}">${p.name} ($${p.price})</option>`).join('');
+  } catch (err) { console.error(err); }
+}
+
+async function placeQuickOrder() {
+  const retailerId = document.getElementById('retailer-select').value;
+  const productId = document.getElementById('product-select').value;
+  const quantity = document.getElementById('order-qty').value;
+  if (!quantity) return alert('Enter quantity');
+  try {
+    const res = await fetch(`${API}/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ retailerId, productId, quantity, amount: 0 })
+    });
+    if ((await res.json()).success) { alert('Order placed!'); location.reload(); }
+  } catch (err) { alert('Error'); }
+}
+
+init();
 </script>
 </body>
 </html>

@@ -3,360 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Products – SCM Pro</title>
+<title>Products – ChainFlow SCM</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/design-system.css">
-<link rel="stylesheet" href="css/components.css">
+<style>
+/* ── INLINED DESIGN SYSTEM & COMPONENTS ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+:root { --bg-primary: #060b18; --bg-secondary: #0d1526; --bg-card: rgba(15, 23, 42, 0.85); --bg-hover: rgba(30, 41, 59, 0.6); --bg-input: rgba(8, 14, 28, 0.9); --accent-blue: #3b82f6; --accent-indigo: #6366f1; --accent-purple: #8b5cf6; --accent-cyan: #06b6d4; --accent-green: #10b981; --accent-amber: #f59e0b; --accent-red: #ef4444; --glow-blue: rgba(59, 130, 246, 0.35); --glow-purple: rgba(139, 92, 246, 0.35); --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #475569; --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 0.95rem; --border: rgba(255, 255, 255, 0.07); --border-light: rgba(255, 255, 255, 0.12); --border-accent: rgba(59, 130, 246, 0.3); --radius-xs: 4px; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px; --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); --sidebar-width: 250px; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg-primary); background-image: radial-gradient(ellipse at 0% 0%, rgba(59,130,246,0.07) 0%, transparent 50%), radial-gradient(ellipse at 100% 100%, rgba(139,92,246,0.07) 0%, transparent 50%); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: var(--text-base); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+.app-container { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 200; border-right: 1px solid var(--border); background: var(--bg-card); backdrop-filter: blur(20px); }
+.sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #fff; }
+.logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px var(--glow-blue); }
+.sidebar-user { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
+.sidebar-nav { flex: 1; padding: 12px; overflow-y: auto; }
+.nav-links { list-style: none; }
+.nav-item a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); transition: var(--transition); }
+.nav-item.active a { background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(99,102,241,0.15)); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.18); }
+.main-content { flex: 1; margin-left: var(--sidebar-width); }
+.topbar { position: sticky; top: 0; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(6, 11, 24, 0.85); backdrop-filter: blur(20px); z-index: 100; }
+.page-content { padding: 28px 32px; }
+.glass-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: var(--transition); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 12px; font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 12px; font-size: var(--text-sm); border-bottom: 1px solid var(--border); }
+.badge { padding: 3px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+.badge.success { background: rgba(16,185,129,0.12); color: #34d399; }
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: var(--radius-sm); font-size: var(--text-sm); font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo)); color: #fff; }
+</style>
 </head>
 <body>
 <div class="app-container">
-
-  <nav class="sidebar glass">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">
-        <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-        <div>ChainFlow<span class="logo-subtitle">Supply Chain Management</span></div>
-      </div>
-    </div>
-    <div class="sidebar-user">
-      <div class="user-avatar" id="user-avatar-initials">--</div>
-      <div class="user-info"><div class="user-name" id="sidebar-username">Loading...</div><div class="user-role" id="sidebar-role">—</div></div>
-      <span class="badge primary" id="role-tag" style="font-size:0.6rem;padding:2px 7px;"></span>
-    </div>
+  <nav class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>ChainFlow</div></div>
+    <div class="sidebar-user"><div class="user-avatar" id="ua">--</div><div class="un">Loading...</div></div>
     <div class="sidebar-nav">
-      <div class="nav-section-label">Main Menu</div>
       <ul class="nav-links">
         <li class="nav-item"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-        <li class="nav-item active"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products <span class="nav-badge">2</span></a></li>
+        <li class="nav-item active"><a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a></li>
         <li class="nav-item"><a href="orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Orders</a></li>
-        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments <span class="nav-badge">1</span></a></li>
+        <li class="nav-item"><a href="shipments.html"><i class="fa-solid fa-truck-fast"></i> Shipments</a></li>
         <li class="nav-item"><a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a></li>
       </ul>
-      <div class="nav-section-label" style="margin-top:8px;">Management</div>
-      <ul class="nav-links">
-        <li class="nav-item"><a href="warehouses.html"><i class="fa-solid fa-warehouse"></i> Warehouses</a></li>
-        <li class="nav-item" data-admin-only><a href="analytics.html"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
-        <li class="nav-item" data-admin-only><a href="reports.html"><i class="fa-solid fa-file-export"></i> Reports</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-footer">
-      <a href="#" data-admin-only><i class="fa-solid fa-gear"></i> Settings</a>
-      <a href="#" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
     </div>
   </nav>
 
   <div class="main-content">
-    <div class="topbar glass">
-      <div class="topbar-left">
-        <div class="breadcrumb"><span>Home</span><i class="fa-solid fa-chevron-right"></i><span>Products</span></div>
-      </div>
-      <div class="topbar-right">
-        <button class="topbar-icon-btn" data-tooltip="Notifications"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></button>
-        <button class="btn btn-primary btn-sm" data-modal-target="add-product-modal" data-permission="addProduct"><i class="fa-solid fa-plus"></i> Add Product</button>
-      </div>
-    </div>
-
+    <div class="topbar"><div>Products Inventory</div><button class="btn btn-primary" onclick="location.reload()">Refresh</button></div>
     <div class="page-content">
-      <div class="page-header fade-up">
-        <div class="page-header-left">
-          <h1>Inventory Management</h1>
-          <p>Manage your product catalogue, stock levels, and warehouse assignments.</p>
-        </div>
-        <div class="header-actions">
-          <button class="btn btn-secondary btn-sm" data-permission="editProduct"><i class="fa-solid fa-file-import"></i> Import CSV</button>
-          <button class="btn btn-secondary btn-sm" data-admin-only><i class="fa-solid fa-file-export"></i> Export</button>
-        </div>
-      </div>
-
-      <!-- Summary cards -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
-        <div class="glass-card fade-up delay-1" style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
-          <div class="stat-icon-box" style="background:rgba(59,130,246,0.12);color:var(--accent-blue);width:40px;height:40px;"><i class="fa-solid fa-layer-group"></i></div>
-          <div><div class="stat-label">Total SKUs</div><div style="font-size:1.4rem;font-weight:700;" id="p-total">—</div></div>
-        </div>
-        <div class="glass-card fade-up delay-2" style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
-          <div class="stat-icon-box" style="background:rgba(16,185,129,0.12);color:var(--accent-green);width:40px;height:40px;"><i class="fa-solid fa-circle-check"></i></div>
-          <div><div class="stat-label">In Stock</div><div style="font-size:1.4rem;font-weight:700;" id="p-instock">—</div></div>
-        </div>
-        <div class="glass-card fade-up delay-3" style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
-          <div class="stat-icon-box" style="background:rgba(245,158,11,0.12);color:var(--accent-amber);width:40px;height:40px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div><div class="stat-label">Low Stock</div><div style="font-size:1.4rem;font-weight:700;" id="p-low">—</div></div>
-        </div>
-        <div class="glass-card fade-up delay-4" style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
-          <div class="stat-icon-box" style="background:rgba(239,68,68,0.12);color:var(--accent-red);width:40px;height:40px;"><i class="fa-solid fa-ban"></i></div>
-          <div><div class="stat-label">Out of Stock</div><div style="font-size:1.4rem;font-weight:700;" id="p-out">—</div></div>
-        </div>
-      </div>
-
-      <!-- Products Table -->
-      <div class="glass-card fade-up delay-2">
-        <div class="table-toolbar">
-          <div class="table-search">
-            <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="prod-search" placeholder="Search products…" oninput="filterProd()">
-          </div>
-          <div class="filter-group">
-            <select class="filter-select" id="prod-status-f" onchange="filterProd()">
-              <option value="">All Status</option>
-              <option value="In Stock">In Stock</option>
-              <option value="Low Stock">Low Stock</option>
-              <option value="Out of Stock">Out of Stock</option>
-            </select>
-            <select class="filter-select" id="prod-wh-f" onchange="filterProd()">
-              <option value="">All Warehouses</option>
-              <option value="WH-01">WH-01</option>
-              <option value="WH-02">WH-02</option>
-              <option value="WH-03">WH-03</option>
-            </select>
-            <button class="btn btn-primary btn-sm" data-modal-target="add-product-modal" data-permission="addProduct"><i class="fa-solid fa-plus"></i> Add Product</button>
-          </div>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Product ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Warehouse</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="prod-body"></tbody>
-          </table>
-        </div>
-        <div class="table-pagination">
-          <span class="pagination-info" id="prod-info">—</span>
-          <div class="pagination-controls">
-            <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-        </div>
+      <div class="glass-card">
+        <table>
+          <thead><tr><th>ID</th><th>Name</th><th>Stock</th><th>Price</th><th>Supplier</th></tr></thead>
+          <tbody id="prod-body"></tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Add Product Modal -->
-<div class="modal-overlay" id="add-product-modal">
-  <div class="modal glass">
-    <div class="modal-header">
-      <div><div class="modal-title">Add New Product</div><div class="modal-subtitle">Create a new SKU in the inventory</div></div>
-      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="form-group">
-      <label>Product Name</label>
-      <input type="text" class="form-control" placeholder="e.g. Industrial Processor X-2">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Supplier</label>
-        <select class="form-control">
-          <option>Intellect Components (SUP-01)</option>
-          <option>TechParts Ltd (SUP-02)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Price (USD)</label>
-        <div class="input-icon-wrap">
-          <i class="fa-solid fa-dollar-sign input-prefix-icon"></i>
-          <input type="number" class="form-control" placeholder="0.00" step="0.01">
-        </div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Initial Stock Qty</label>
-        <input type="number" class="form-control" placeholder="0" min="0">
-      </div>
-      <div class="form-group">
-        <label>Assign Warehouse</label>
-        <select class="form-control">
-          <option value="WH-01">North Central Hub</option>
-          <option value="WH-02">East Coast Storage</option>
-          <option value="WH-03">West Cold Storage</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <textarea class="form-control" rows="2" placeholder="Optional product description…"></textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" data-modal-close>Cancel</button>
-      <button class="btn btn-primary" onclick="document.getElementById('add-product-modal').classList.remove('active')"><i class="fa-solid fa-check"></i> Save Product</button>
-    </div>
-  </div>
-</div>
-
-<script src="js/auth.js"></script>
-<script src="js/main.js"></script>
 <script>
-const session = requireAuth();
-if (session) {
-  const initials = session.username.slice(0,2).toUpperCase();
-  document.getElementById('user-avatar-initials').textContent = initials;
-  applyPermissions();
-}
+const AUTH_KEY = 'chainflow_auth';
+const API = 'https://full-boxes-stop.loca.lt/api';
+function getSession() { return JSON.parse(localStorage.getItem(AUTH_KEY)); }
+const s = getSession(); if(!s) location.href='login.html';
+document.getElementById('ua').textContent = s.username.slice(0,2).toUpperCase();
+document.querySelector('.un').textContent = s.username;
 
-let allProducts = [];
-let currentEditId = null;
-
-async function loadProducts() {
-  try {
-    const res = await fetch('http://localhost:3000/api/products');
-    allProducts = await res.json();
-    
-    // Summary
-    document.getElementById('p-total').textContent = allProducts.length;
-    document.getElementById('p-instock').textContent = allProducts.filter(p => p.stock > 20).length;
-    document.getElementById('p-low').textContent = allProducts.filter(p => p.stock <= 20 && p.stock > 0).length;
-    document.getElementById('p-out').textContent = allProducts.filter(p => p.stock == 0).length;
-    
-    renderProds(allProducts);
-    populateDropdowns();
-  } catch (err) { console.error(err); }
-}
-
-async function populateDropdowns() {
-  const pRes = await fetch('http://localhost:3000/api/partners');
-  const partners = await pRes.json();
-  const supSelects = document.querySelectorAll('select[data-type="supplier"]');
-  const options = partners.filter(p => p.type === 'SUPPLIER').map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-  supSelects.forEach(s => s.innerHTML = options);
-
-  const wRes = await fetch('http://localhost:3000/api/warehouses');
-  const warehouses = await wRes.json();
-  const whSelects = document.querySelectorAll('select[data-type="warehouse"]');
-  const whOptions = warehouses.map(w => `<option value="${w.id}">${w.name}</option>`).join('');
-  whSelects.forEach(s => s.innerHTML = whOptions);
-}
-
-function renderProds(list) {
+async function load() {
+  const res = await fetch(`${API}/products`);
+  const data = await res.json();
   const b = document.getElementById('prod-body');
-  b.innerHTML = '';
-  list.forEach(p => {
-    const status = p.stock == 0 ? 'Out of Stock' : (p.stock <= 20 ? 'Low Stock' : 'In Stock');
-    b.innerHTML += `
-      <tr>
-        <td class="font-mono" style="color:var(--accent-blue)">${p.id}</td>
-        <td class="fw-600">${p.name}</td>
-        <td>$${p.price.toFixed(2)}</td>
-        <td>${p.stock}</td>
-        <td><span class="badge primary">${p.warehouse || 'N/A'}</span></td>
-        <td>${getStatusBadge(status)}</td>
-        <td>
-          <button class="btn-icon-only" onclick="openEditModal(${p.id})" data-permission="editProduct" data-tooltip="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-          <button class="btn-icon-only danger" onclick="deleteProduct(${p.id})" data-permission="deleteProduct" data-tooltip="Delete"><i class="fa-solid fa-trash"></i></button>
-        </td>
-      </tr>`;
+  data.forEach(p => {
+    b.innerHTML += `<tr><td>#${p.id}</td><td style="font-weight:600;">${p.name}</td><td><span class="badge success">${p.stock} units</span></td><td>$${p.price}</td><td style="color:var(--text-muted);">${p.supplier || 'N/A'}</td></tr>`;
   });
-  document.getElementById('prod-info').textContent = `Showing 1–${list.length} of ${list.length}`;
-  applyPermissions();
 }
-
-function openEditModal(id) {
-  const p = allProducts.find(x => x.id == id);
-  if (!p) return;
-  currentEditId = id;
-  const modal = document.getElementById('edit-product-modal');
-  modal.querySelector('input[name="name"]').value = p.name;
-  modal.querySelector('input[name="price"]').value = p.price;
-  modal.querySelector('input[name="stock"]').value = p.stock;
-  modal.classList.add('active');
-}
-
-async function updateProduct() {
-  const modal = document.getElementById('edit-product-modal');
-  const name = modal.querySelector('input[name="name"]').value;
-  const price = modal.querySelector('input[name="price"]').value;
-  const stock = modal.querySelector('input[name="stock"]').value;
-
-  try {
-    const res = await fetch(`http://localhost:3000/api/products/${currentEditId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, price, stock })
-    });
-    if ((await res.json()).success) {
-      modal.classList.remove('active');
-      loadProducts();
-      alert('Product updated successfully!');
-    }
-  } catch (err) { alert('Error updating product'); }
-}
-
-async function saveProduct() {
-  const modal = document.getElementById('add-product-modal');
-  const name = modal.querySelector('input[placeholder*="X-2"]').value;
-  const supplierId = modal.querySelectorAll('select')[0].value;
-  const price = modal.querySelector('input[type="number"]').value;
-  const stock = modal.querySelectorAll('input[type="number"]')[1].value;
-  const warehouseId = modal.querySelectorAll('select')[1].value;
-
-  try {
-    const res = await fetch('http://localhost:3000/api/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, price, stock, warehouseId, supplierId })
-    });
-    if ((await res.json()).success) {
-      modal.classList.remove('active');
-      loadProducts();
-      alert('Product saved successfully!');
-    }
-  } catch (err) { alert('Error saving product'); }
-}
-
-async function deleteProduct(id) {
-  if (!confirm('Delete product ' + id + '?')) return;
-  try {
-    const res = await fetch(`http://localhost:3000/api/products/${id}`, { method: 'DELETE' });
-    if ((await res.json()).success) {
-      loadProducts();
-      alert('Product deleted');
-    }
-  } catch (err) { alert('Error deleting product'); }
-}
-
-function filterProd() {
-  const q = document.getElementById('prod-search').value.toLowerCase();
-  const s = document.getElementById('prod-status-f').value;
-  const w = document.getElementById('prod-wh-f').value;
-  const filtered = allProducts.filter(p =>
-    (String(p.id) + p.name + (p.warehouse || '')).toLowerCase().includes(q) &&
-    (!s || (p.stock == 0 ? 'Out of Stock' : (p.stock <= 20 ? 'Low Stock' : 'In Stock')) === s) &&
-    (!w || p.warehouse === w)
-  );
-  renderProds(filtered);
-}
-
-loadProducts();
-document.querySelector('#add-product-modal .btn-primary').onclick = saveProduct;
-document.querySelector('#edit-product-modal .btn-primary').onclick = updateProduct;
-</script>
-<!-- Edit Product Modal -->
-<div class="modal-overlay" id="edit-product-modal">
-  <div class="modal glass">
-    <div class="modal-header">
-      <div><div class="modal-title">Edit Product</div><div class="modal-subtitle">Update product details and stock</div></div>
-      <button class="btn-icon-only" data-modal-close><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="form-group"><label>Product Name</label><input type="text" name="name" class="form-control"></div>
-    <div class="form-row">
-      <div class="form-group"><label>Price (USD)</label><input type="number" name="price" class="form-control" step="0.01"></div>
-      <div class="form-group"><label>Stock Quantity</label><input type="number" name="stock" class="form-control" min="0"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" data-modal-close>Cancel</button>
-      <button class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Changes</button>
-    </div>
-  </div>
-</div>
+load();
 </script>
 </body>
 </html>
-
